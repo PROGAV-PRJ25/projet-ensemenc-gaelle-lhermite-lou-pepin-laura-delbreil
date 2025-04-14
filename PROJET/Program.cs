@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 
 namespace Potager2025
@@ -13,3 +14,4 @@ namespace Potager2025
         }
     }
 }
+=======
