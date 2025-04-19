@@ -39,7 +39,7 @@ public class Hachich : Plante
             }
 
             croissanceActuelle += VitesseCroissance * score;
-            age += 2;
+            age += 2; //on augmente de 2 car saut de deux semaines dans le temps
 
             // Simuler une maladie aléatoire
             
