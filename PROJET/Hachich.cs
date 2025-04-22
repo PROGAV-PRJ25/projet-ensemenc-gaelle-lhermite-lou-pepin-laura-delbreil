@@ -13,6 +13,7 @@ public class Hachich : Plantes
         Espacement = 30;
         PlaceNecessaire = 0.5f;
         VitesseCroissance = 5;
+        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
         BesoinEau = 2.0f;
         BesoinLumiere = 8.0f;
         TempPreferee = 25;
@@ -23,7 +24,7 @@ public class Hachich : Plantes
 
     public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
     {
-        if (!Estvivante) return;
+        if (!EstVivante) return;
 
         if (eau >= BesoinEau) EtatSante += 0.01f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.01f;
@@ -37,61 +38,53 @@ public class Hachich : Plantes
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {
-            Estvivante = false;
+            EstVivante = false;
             EtatSante = 0.0f; // Mettre santé à 0
             Console.WriteLine($"{Nom} est morte.");
             return;
         }
 
-        croissanceActuelle += VitesseCroissance * 4 * EtatSante;
 
         // Limiter la croissance à 100%
-        if (croissanceActuelle > 100f) croissanceActuelle = 100f;
+        if (CroissanceActuelle > 100f) CroissanceActuelle = 100f;
     }
 
-    public override void Recolter()
-    {
-        Console.WriteLine($"Vous pouvez récolter {Fruits} graines de {Nom} maintenant");
-
-        //if on clique dessus alors inventaire =+ fruits
-        
-    }
     public override void Afficher()
     {
-        Console.WriteLine($"[{Nom}] Croissance: {croissanceActuelle}% | Santé: {EtatSante * 100}% | Âge: {age} sem");
+        Console.WriteLine($"[{Nom}] Croissance: {CroissanceActuelle}% | Santé: {EtatSante * 100}% | Âge: {age} sem");
 
-        if (Estvivante)
+        if (EstVivante)
         {
-            if (croissanceActuelle < 15)
+            if (CroissanceActuelle < 15)
             {
                 Console.WriteLine(".");
             }
-            else if (croissanceActuelle < 35)
+            else if (CroissanceActuelle < 35)
             {
                 Console.WriteLine("🌱");
             }
-            else if (croissanceActuelle < 50)
+            else if (CroissanceActuelle < 50)
             {
                 Console.WriteLine("🌿");
             }
-            else if (croissanceActuelle < 75)
+            else if (CroissanceActuelle < 75)
             {
                 Console.WriteLine("🥦");
             }
-            else if (croissanceActuelle < 90)
+            else if (CroissanceActuelle < 90)
             {
                 Console.WriteLine("🍃");
-                //Console.WriteLine("C'est la récolte!");
+               
             }
-            else if (croissanceActuelle < 100)
+            else if (CroissanceActuelle < 100)
             {
                 Console.WriteLine("🍂");
                 //Console.WriteLine("Vite vite vite!!!!! ");
             }
-            else if (croissanceActuelle >= 100)
+            else if (CroissanceActuelle >= 100)
             {
-                Estvivante = false;
-                croissanceActuelle = 0;
+                EstVivante = false;
+                CroissanceActuelle = 0;
                 EtatSante = 0.0f; // Santé à 0 à la fin du cycle
                 Console.WriteLine("🪦");
                 Console.WriteLine("Hachich a fini son cycle de vie");
@@ -99,6 +92,7 @@ public class Hachich : Plantes
         }
     }
 }
+
 /* CODE DANS PROGRAM POUR FONCTIONNER
 using System;
 
