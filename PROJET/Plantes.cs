@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 public abstract class Plantes
     {
         public string? Nom { get; protected set; }
@@ -12,8 +14,10 @@ public abstract class Plantes
         public float TempPreferee { get; protected set; } // °C
         public float EsperanceDeVie { get; protected set; } // en semaines
         public int Fruits { get; protected set; } // nb de fruits et/ou légumes produits
-        public float EtatSante { get; protected set; } // en pourcentage
+        public float EtatSante { get; protected set; } // en pourcentage 
+        public bool Estvivante {get; protected set; }
         
         public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
         public abstract void Afficher();
+        public abstract void Recolter();
     }
