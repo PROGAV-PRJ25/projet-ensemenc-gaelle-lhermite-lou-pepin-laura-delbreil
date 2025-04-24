@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj": {}
+    "/Users/laura/ENSemenCe/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj": {}
   },
   "projects": {
-    "/Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj": {
+    "/Users/laura/ENSemenCe/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj",
+        "projectUniqueName": "/Users/laura/ENSemenCe/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj",
         "projectName": "PROJET",
-        "projectPath": "/Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj",
-        "packagesPath": "/Users/lou/.nuget/packages/",
-        "outputPath": "/Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/obj/",
+        "projectPath": "/Users/laura/ENSemenCe/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/PROJET.csproj",
+        "packagesPath": "/Users/laura/.nuget/packages/",
+        "outputPath": "/Users/laura/ENSemenCe/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/lou/.nuget/NuGet/NuGet.Config"
+          "/Users/laura/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -58,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.404/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
