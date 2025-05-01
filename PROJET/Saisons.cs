@@ -5,12 +5,22 @@ public class Saisons
     public double Temperature {get; set;}
     public double TauxPrecipitation {get; set;} //Litres par semaine
 
-    public Saisons(string nom, double tauxSoleil, double temperature, double tauxPrecipitation) //Météo bordelaise sera prise en compte pour les valeurs par saison 
+    //Ajout des probas des différents événements dans le constructeur des saisons
+    public double ProbaPluieTorrentielle { get; set; } 
+    public double ProbaSecheresse { get; set; }
+    public double ProbaGel { get; set; }
+    public double ProbaCanicule { get; set; }
+
+    public Saisons(string nom, double tauxSoleil, double temperature, double tauxPrecipitation, double probaPluie, double probaSecheresse, double probaGel, double probaCanicule) //Météo bordelaise sera prise en compte pour les valeurs par saison, probabilités choisies arbitrairement
     {
         Nom = nom;
         TauxSoleil = tauxSoleil; 
         TauxPrecipitation = tauxPrecipitation; 
         Temperature = temperature; 
+        ProbaPluieTorrentielle = probaPluie;
+        ProbaSecheresse = probaSecheresse;
+        ProbaGel = probaGel;
+        ProbaCanicule = probaCanicule;
     }
 
     public override string ToString()
