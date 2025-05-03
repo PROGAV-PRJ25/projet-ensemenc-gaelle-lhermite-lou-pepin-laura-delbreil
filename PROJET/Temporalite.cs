@@ -9,7 +9,7 @@ public class Temporalite //Classe pour la temporalité classique
     public Saisons Automne {get; set;}
     public Saisons Hiver {get; set;}
     public Saisons Printemps {get; set;}
-
+    public bool EtatUrgence {get; set;}
     public Temporalite(DateOnly dateDebut, int sautsTemps=14)
     {
         DateDebut = dateDebut; 
@@ -18,8 +18,9 @@ public class Temporalite //Classe pour la temporalité classique
         SaisonActuelle = new Saisons ("Saison",5,5,5, 0,0,0,0);
         Ete = new Saisons("Ete",9.4,21,13,0.1,0.4,0,0.5); //9.4h de soleil, 21 degrés en moyenne, 13L d'eau par semaine/m², probaPluie = 0.1, probaSecheresse = 0.4, probaGel = 0, probaCanicule = 0.5
         Automne = new Saisons("Automne",5.6,11,18,0.3,0.1,0.1,0.0); //5.6h de soleil, 11 degrés en moyenne, 18L d'eau par semaine/m², probaPluie = 0.3, probaSecheresse = 0.1, probaGel = 0.1, probaCanicule = 0 
-        Hiver = new Saisons("Hiver",5.7,7,14,0.2,0,0.6,0); //5.7h de soleil, 7 degrés en moyenne, 14L d'eau par semaine/m², probaPluie = 0.2, probaSecheresse = 0, probaGel = 0.6, probaCanicule = 0  
+        Hiver = new Saisons("Hiver",5.7,7,14,0.2,0,0.5,0); //5.7h de soleil, 7 degrés en moyenne, 14L d'eau par semaine/m², probaPluie = 0.2, probaSecheresse = 0, probaGel = 0.5, probaCanicule = 0  
         Printemps = new Saisons("Printemps",9,16,16,0.2,0.1,0.2,0.1); //9h de soleil, 16 degrés en moyenne, 16L d'eau par semaine/m², probaPluie = 0.2, probaSecheresse = 0.1, probaGel = 0.2, probaCanicule = 0.1
+        EtatUrgence = false; 
         EtablirSaison();  //Permet d'établir la saison dès le premier jour de jeu
     }
 
@@ -57,6 +58,6 @@ public class Temporalite //Classe pour la temporalité classique
 
     public override string ToString()
     {
-        return $"Nous avons débuté notre aventure le {DateDebut} !! La date du jour est : {DateActuelle}. Nous sommes en cette saison : {SaisonActuelle.Nom}"; //Affichage de la date actuelle
+        return $"Nous sommes actuellement le : {DateActuelle}. Nous sommes en cette saison : {SaisonActuelle.Nom}"; //Affichage de la date actuelle
     }
 }

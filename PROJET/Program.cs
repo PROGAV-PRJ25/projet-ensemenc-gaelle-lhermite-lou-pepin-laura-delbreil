@@ -1,20 +1,36 @@
 ﻿//Tests de fonctionnement des classes de temmporalité, avec ajout de temps
 Temporalite temp1 = new Temporalite(DateOnly.Parse("2025-1-1")); //Parse présent pour permettre la récupération du string en format date
 Meteo meteo = new Meteo();
-Console.WriteLine(temp1); 
 
-for (int i = 0; i<10; i++){
+for (int i = 0; i<25; i++){
+    meteo.GenererEvenement(temp1.SaisonActuelle, temp1); //on génére un événement météo en fonction de la saison et de la temporalité dans laquelle on est
+    if (temp1.EtatUrgence && temp1.GetType() != typeof(TempoUrgence)) // si EtatUrgence est vrai mais que l'on est pas en état d'urgence, on passe en mode urgence
+        {
+            temp1 = new TempoUrgence(temp1.DateActuelle){ //on récupère les informations des saisons de temp1
+                Ete = temp1.Ete,
+                Automne = temp1.Automne,
+                Hiver = temp1.Hiver,
+                Printemps = temp1.Printemps
+            }; 
+        }
+     else if (temp1.EtatUrgence == false && temp1.GetType() == typeof(TempoUrgence)) // si EtatUrgence est faux mais que l'on est en état d'urgence, on passe en mode normal
+        {
+            temp1 = new Temporalite(temp1.DateActuelle){ //on récupère les informations des saisons de temp1
+                Ete = temp1.Ete,
+                Automne = temp1.Automne,
+                Hiver = temp1.Hiver,
+                Printemps = temp1.Printemps
+            }; 
+        }
+    if (temp1.GetType() == typeof(TempoUrgence)){ //Pour afficher le mode dans lequel on est 
+        Console.WriteLine("MODE URGENCE");
+    }
+    else{
+        Console.WriteLine("MODE NORMAL"); 
+    }
+    Console.WriteLine();
+    Console.WriteLine(temp1);
+    Console.WriteLine(meteo);
+    Console.WriteLine(); 
     temp1.AvancerTemps();
-    meteo.GenererEvenement(temp1.SaisonActuelle);
-    Console.WriteLine(meteo); 
-    Console.WriteLine(temp1); 
-}
-
-//Même chose pour la tempo d'urgence
-Temporalite temp2 = new TempoUrgence(temp1.DateActuelle); 
-Console.WriteLine(temp2); 
-
-for (int i = 0; i<4; i++){
-    temp2.AvancerTemps(); 
-    Console.WriteLine(temp2); 
 }
