@@ -9,7 +9,7 @@ public class Temporalite //Classe pour la temporalité classique
     public Saisons Automne {get; set;}
     public Saisons Hiver {get; set;}
     public Saisons Printemps {get; set;}
-    public bool EtatUrgence {get; set;}
+    public bool EtatUrgence {get; set;} // vérification de si on est en état d'urgence ou pas
     public Temporalite(DateOnly dateDebut, int sautsTemps=14)
     {
         DateDebut = dateDebut; 
