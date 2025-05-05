@@ -1,15 +1,31 @@
 using System;
+using System.Collections.Generic;
 
-namespace Potager2025
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Création de la liste de plantes du jardin
+        List<Plantes> jardin = new List<Plantes>
         {
-            for (int deuxsemaines = 1; deuxsemaines <= 27; deuxsemaines++)
+            new Hachich()
+        };
+
+        // Simuler plusieurs semaines de croissance
+        for (int semaine = 1; semaine <= 27; semaine++)
+        {
+            Console.Clear() ;
+            Console.WriteLine($"\n📆 Semaine {2*semaine}");
+
+            foreach (var plante in jardin)
             {
-                Console.WriteLine($"\nSemaine {deuxsemaines*2} :");
+                // Exemple : conditions météo fixes
+                plante.Pousser(eau: 2.5f, lumiere: 8f, temperature: 24f, typeTerrain: "terre");
+                plante.Afficher();
             }
+
+            Console.WriteLine("\nAppuie sur une touche pour passer à la semaine suivante...");
+            Console.ReadKey(true);
         }
     }
 }
