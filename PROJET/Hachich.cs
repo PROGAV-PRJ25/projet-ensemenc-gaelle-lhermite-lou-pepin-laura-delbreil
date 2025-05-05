@@ -6,8 +6,8 @@ public class Hachich : Plantes
     public Hachich()
     {
         Nom = "Hachich";
-        EstVivace = true;
-        Estvivante = true;
+        //EstVivace = true;
+        EstVivante = true;
         EstComestible = true;
         TerrainPrefere = "terre";
         Espacement = 30;

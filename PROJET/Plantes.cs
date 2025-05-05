@@ -34,10 +34,10 @@ public abstract class Plantes
         
         public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
         public abstract void Afficher();
-        
+        /*
         public void Recolter(Inventaire inventaire)
         {
-            if (!Estvivante)
+            if (!EstVivante)
             {
                 Console.WriteLine($"{Nom} est morte, aucune récolte possible.");
                 return;
@@ -46,7 +46,7 @@ public abstract class Plantes
             Console.WriteLine($"Vous récoltez {Fruits} graines de {Nom}.");
             inventaire.AjouterGraines(Nom, Fruits);
         }
-
+        */
         public void AfficherMessages()
         {
              if (CroissanceActuelle > 75)
