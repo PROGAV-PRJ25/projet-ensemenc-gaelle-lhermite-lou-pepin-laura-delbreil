@@ -8,6 +8,10 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PROJET
+<<<<<<< HEAD
 build_property.ProjectDir = /Users/lou/Desktop/cours_1A/S6/Progra avancée/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/
+=======
+build_property.ProjectDir = /Users/lou/Desktop/cours_1A/Informatics/projet-ensemenc-gaelle-lhermite-lou-pepin-laura-delbreil/PROJET/
+>>>>>>> 4ff219623fcc3576c36024d4c3653ba47b575620
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
