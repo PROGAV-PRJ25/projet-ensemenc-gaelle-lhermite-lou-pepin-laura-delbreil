@@ -1,6 +1,5 @@
 public class Hachich : Plantes
 {
-    private float croissanceActuelle = 0;
     private float age = 0;
 
     public Hachich()
@@ -13,7 +12,7 @@ public class Hachich : Plantes
         Espacement = 30;
         PlaceNecessaire = 0.5f;
         VitesseCroissance = 5;
-        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
+        CroissanceActuelle = 0;
         BesoinEau = 2.0f;
         BesoinLumiere = 8.0f;
         TempPreferee = 25;
@@ -35,6 +34,7 @@ public class Hachich : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2; // saut de 2 semaines
+        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {
