@@ -2,80 +2,94 @@ public class Jardin
 {
     public Terrain[] Terrains { get; private set; }
 
-    public Jardin(int nombreDeTerrains)
+    // Constructeur
+    public Jardin(Menu menu)
     {
-        Terrains = new Terrain[nombreDeTerrains];
+        int nombreDeTerrains = menu.NbTerrains; // 2, 4, ou 6 terrains
+        Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker les terrains
+        Random rand = new Random();
 
+        // Créer les terrains et les stocker dans le tableau
         for (int i = 0; i < nombreDeTerrains; i++)
         {
-            Console.WriteLine($"\nType du terrain #{i + 1} (terre / sable / argile) : ");
-            string type = Console.ReadLine()!.ToLower();
-
-            while (type != "terre" && type != "sable" && type != "argile")
-            {
-                Console.WriteLine("Type invalide. Veuillez entrer 'terre', 'sable' ou 'argile' : ");
-                type = Console.ReadLine()!.ToLower();
-            }
-
-            Console.Write($"Nom du terrain #{i + 1} : ");
-            string nom = Console.ReadLine()!;
+            string[] types = { "terre", "sable", "argile" };
+            string type = types[rand.Next(types.Length)];
+            string nom = $"Terrain_{i + 1}"; // Nom généré automatiquement
 
             Terrains[i] = type switch
             {
-                "terre" => new TerrainTerreux(nom),
-                "sable" => new TerrainSableux(nom),
-                "argile" => new TerrainArgileux(nom),
+                "terre" => new TerrainTerreux(nom, 4),
+                "sable" => new TerrainSableux(nom, 4),
+                "argile" => new TerrainArgileux(nom, 4),
                 _ => throw new Exception("Type de terrain inconnu.")
             };
         }
     }
 
-    public void Afficher()
-{
-    int taille = (int)Math.Sqrt(Terrains.Length);
-
-    Console.WriteLine($"\n🪴 Voici votre jardin ({Terrains.Length} terrain(s)) :");
-
-    // On capture les lignes de chaque terrain une fois
-    string[][] rendus = Terrains.Select(t => GetAffichageLignes(t)).ToArray();
-
-    int maxLignes = rendus.Max(r => r.Length);
-
-    for (int ligne = 0; ligne < taille; ligne++)
+    // Méthode pour afficher les terrains dans une grille
+    public void Afficher(Menu menu)
     {
-        for (int iLigne = 0; iLigne < maxLignes; iLigne++)
+        int colonnes = 2;  // 2 colonnes
+        int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // Calculer le nombre de lignes en fonction du nombre de terrains
+
+        // Afficher chaque terrain dans une grille
+        for (int ligne = 0; ligne < lignes; ligne++)
         {
-            for (int col = 0; col < taille; col++)
+            for (int col = 0; col < colonnes; col++)
             {
-                int index = ligne * taille + col;
-
-                if (index < rendus.Length)
+                int index = ligne * colonnes + col; // Calculer l'index du terrain
+                if (index < Terrains.Length)
                 {
-                    string[] rendu = rendus[index];
-
-                    // Affiche la ligne si elle existe, sinon une ligne vide
-                    if (iLigne < rendu.Length)
-                        Console.Write(rendu[iLigne]);
-                    else
-                        Console.Write(new string(' ', rendu[0].Length));
-
-                    Console.Write("  "); // Espace entre les terrains
+                    // Affichage du terrain avec la méthode Afficher() de chaque terrain
+                    Terrains[index].Afficher(menu); 
+                    Console.Write(""); // Espacement entre les terrains
                 }
             }
-            Console.WriteLine();
+            //Console.Write("  "); // Nouvelle ligne après chaque ligne de la grille
         }
-        Console.WriteLine(); // Espace entre les rangées
     }
-}
-    private string[] GetAffichageLignes(Terrain terrain)
-    {
-        using (var writer = new StringWriter())
-        {
-            Console.SetOut(writer);
-            terrain.Afficher();
-            Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true });
 
-            return writer.ToString().Split('\n', StringSplitOptions.RemoveEmptyEntries);
+    // Méthode pour naviguer entre les terrains
+    public void Naviguer()
+    {
+        int indexSelectionne = 0; // Terrain initialement sélectionné
+        int nbTerrains = Terrains.Length;
+
+        while (true)
+        {
+            Console.Clear();
+            //Afficher();  // Afficher les terrains sous forme de grille
+            Console.WriteLine($"\nTerrain sélectionné : {indexSelectionne + 1}/{nbTerrains}");
+
+            // Navigation avec les flèches directionnelles
+            var key = Console.ReadKey(true).Key;
+
+            switch (key)
+            {
+                case ConsoleKey.UpArrow:
+                    if (indexSelectionne > 0)
+                        indexSelectionne--; // Aller vers le terrain précédent
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    if (indexSelectionne < nbTerrains - 1)
+                        indexSelectionne++; // Aller vers le terrain suivant
+                    break;
+
+                case ConsoleKey.Enter:
+                    InteragirAvecTerrain(Terrains[indexSelectionne]); // Afficher des infos sur le terrain sélectionné
+                    break;
+            }
         }
+    }
+
+    // Afficher les détails d'un terrain
+    private void InteragirAvecTerrain(Terrain terrain)
+    {
+        // Afficher des informations simples sur le terrain sélectionné
+        Console.WriteLine($"\nVous avez sélectionné le terrain : {terrain.Nom}");
+        Console.WriteLine($"Type de sol : {terrain.TypeDeSol}");
+        Console.WriteLine("Appuyez sur une touche pour revenir.");
+        Console.ReadKey(true); // Attendre que l'utilisateur appuie sur une touche pour revenir
     }
 }
