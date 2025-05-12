@@ -2,18 +2,17 @@ using System;
 
 public class Menu
 {
-    private static readonly string[] tailles = { "Small (4)", "Medium (9)", "Large (12)" };
-    private static readonly int[] nbParcellesOptions = { 2, 3, 4 };
-    private static readonly int[] nbTerrainsOptions = { 2, 4, 6 };
+
+    private static readonly int[] nbTerrainsOptions = { 1, 4, 9 };
     public int NbParcelles { get; private set; }
     public int NbTerrains { get; private set; }
 
 
     public void Demarrer()
 {
-    int tailleIndex = Choisir("Taille des terrains :", tailles);
+  
     int nbTerrainsIndex = Choisir("Nombre de terrains :", Array.ConvertAll(nbTerrainsOptions, x => x.ToString()));
-    NbParcelles = nbParcellesOptions[tailleIndex];
+
     NbTerrains = nbTerrainsOptions[nbTerrainsIndex];
 
 

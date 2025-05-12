@@ -42,7 +42,7 @@ public class Jardin
                 {
                     // Affichage du terrain avec la méthode Afficher() de chaque terrain
                     Terrains[index].Afficher(menu); 
-                    Console.Write(""); // Espacement entre les terrains
+                    Console.WriteLine(); // Espacement entre les terrains
                 }
             }
             //Console.Write("  "); // Nouvelle ligne après chaque ligne de la grille

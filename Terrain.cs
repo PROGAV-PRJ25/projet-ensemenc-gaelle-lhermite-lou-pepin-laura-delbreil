@@ -30,7 +30,7 @@ public abstract class Terrain
     public virtual void Afficher(Menu menu)
     {
        
-        int lignes = menu.NbParcelles;
+        int lignes = 3;
         string reset = "\x1b[0m";
         for (int ligne = 0; ligne < lignes; ligne++)
         {
@@ -41,7 +41,6 @@ public abstract class Terrain
                 {
                     Console.Write($"{Couleur}    {reset}  "); // 3 espaces de largeur + 1 espace
                 }
-                Console.WriteLine();
             }
             Console.WriteLine(); // Espace vertical entre les rangées
         }
