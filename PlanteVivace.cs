@@ -49,15 +49,45 @@ public abstract class PlanteVivace : Plantes
         if (croissanceActuelle > 100f) croissanceActuelle = 100f;
     }
 
-    public override void Afficher()
+    public override string Afficher()
     {
-        if (estEnDormance)
-        {
-            Console.WriteLine($"[{Nom}] 🌒 Dormance (âge: {age} sem) => -");
-            return;
-        }
+        string emoji = ""; // Initialisation de la variable emoji
 
-    
+        if (EstVivante)
+        {
+            if (CroissanceActuelle < 15)
+            {
+                emoji = "."; // Pas de croissance
+            }
+            else if (CroissanceActuelle < 35)
+            {
+                emoji = "🌱"; // Jeune pousse
+            }
+            else if (CroissanceActuelle < 50)
+            {
+                emoji = "🌿"; // Plante plus grande
+            }
+            else if (CroissanceActuelle < 75)
+            {
+                emoji = "🥦"; // Plante presque mature
+            }
+            else if (CroissanceActuelle < 90)
+            {
+                emoji = "🍃"; // Plante en pleine croissance
+            }
+            else if (CroissanceActuelle < 100)
+            {
+                emoji = "🍂"; // Plante mature
+            }
+            else if (CroissanceActuelle >= 100)
+            {
+                EstVivante = false;
+                CroissanceActuelle = 0;
+                EtatSante = 0.0f; // Santé à 0 à la fin du cycle
+                emoji = "🪦"; // Plante morte
+            }
+        }
+        
+        return emoji; // Retourner l'emoji au lieu de l'afficher
     }
 }
-

@@ -1,12 +1,15 @@
 public class Jardin
 {
     public Terrain[] Terrains { get; private set; }
-
+    private Plantes?[,] Grille;  // Tableau pour gérer la grille du jardin (6 colonnes)
+    
     // Constructeur
     public Jardin(Menu menu)
     {
-        int nombreDeTerrains = menu.NbTerrains; // 2, 4, ou 6 terrains
+        int nombreDeTerrains = menu.NbTerrains; // Nombre de terrains (2, 4, ou 6 terrains)
         Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker les terrains
+        Grille = new Plantes?[nombreDeTerrains, 6]; // Tableau pour gérer les plantes dans une grille de 6 colonnes
+
         Random rand = new Random();
 
         // Créer les terrains et les stocker dans le tableau
@@ -26,13 +29,32 @@ public class Jardin
         }
     }
 
-    // Méthode pour afficher les terrains dans une grille
+    // Méthode pour planter une plante dans la grille
+    public void PlanterDansGrille(int terrainIndex, int colonne, Plantes plante)
+    {
+        if (terrainIndex < 0 || terrainIndex >= Terrains.Length)
+        {
+            Console.WriteLine("Erreur : index de terrain hors limites.");
+            return;
+        }
+        if (colonne < 0 || colonne >= 6)
+        {
+            Console.WriteLine("Erreur : colonne hors limites.");
+            return;
+        }
+
+        // Placer la plante dans la case correspondante
+        Grille[terrainIndex, colonne] = plante;
+        Console.WriteLine($"Plante {plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne}.");
+    }
+
+    // Méthode pour afficher le jardin
     public void Afficher(Menu menu)
     {
-        int colonnes = 2;  // 2 colonnes
+        int colonnes = 6;  // Toujours 6 colonnes
         int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // Calculer le nombre de lignes en fonction du nombre de terrains
 
-        // Afficher chaque terrain dans une grille
+        // Afficher chaque terrain dans une grille de 6 colonnes
         for (int ligne = 0; ligne < lignes; ligne++)
         {
             for (int col = 0; col < colonnes; col++)
@@ -40,12 +62,11 @@ public class Jardin
                 int index = ligne * colonnes + col; // Calculer l'index du terrain
                 if (index < Terrains.Length)
                 {
-                    // Affichage du terrain avec la méthode Afficher() de chaque terrain
-                    Terrains[index].Afficher(menu); 
+                    // Afficher le terrain avec la méthode Afficher() de chaque terrain
+                    Terrains[index].Afficher(menu);
                     Console.WriteLine(); // Espacement entre les terrains
                 }
             }
-            //Console.Write("  "); // Nouvelle ligne après chaque ligne de la grille
         }
     }
 
@@ -58,7 +79,6 @@ public class Jardin
         while (true)
         {
             Console.Clear();
-            //Afficher();  // Afficher les terrains sous forme de grille
             Console.WriteLine($"\nTerrain sélectionné : {indexSelectionne + 1}/{nbTerrains}");
 
             // Navigation avec les flèches directionnelles

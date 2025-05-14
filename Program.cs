@@ -9,7 +9,15 @@ class Program
         menu.Demarrer();
 
         Jardin jardin = new Jardin(menu);
+
+        Hachich h = new Hachich();
+
+// Planter un Hachich à la case (2, 4)
+        jardin.PlanterDansGrille(2, 4, h);
+
+// Afficher le jardin après plantation
         jardin.Afficher(menu);
+
     //     Terrain terrain = new TerrainSableux("ArgileTest",4);
     //     terrain.Afficher();
 

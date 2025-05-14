@@ -33,7 +33,7 @@ public abstract class Plantes
         public bool EstVivante {get; protected set; } //bool qui traite de la vie ou de la mort de la plante
         
         public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
-        public abstract void Afficher();
+        public abstract string Afficher();
         /*
         public void Recolter(Inventaire inventaire)
         {
