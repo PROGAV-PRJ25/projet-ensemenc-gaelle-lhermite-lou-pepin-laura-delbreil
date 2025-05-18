@@ -37,7 +37,7 @@ public class Jardin
             Console.WriteLine("Erreur : index de terrain hors limites.");
             return;
         }
-        if (colonne < 0 || colonne >= 6)
+        if (colonne < 0 || colonne >= 5)
         {
             Console.WriteLine("Erreur : colonne hors limites.");
             return;
@@ -45,30 +45,37 @@ public class Jardin
 
         // Placer la plante dans la case correspondante
         Grille[terrainIndex, colonne] = plante;
-        Console.WriteLine($"Plante {plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne}.");
+        Console.Write(Grille[terrainIndex, colonne]?.Emoji ?? " ");
+
+        Console.WriteLine($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne+1}.");
     }
 
     // Méthode pour afficher le jardin
     public void Afficher(Menu menu)
-    {
-        int colonnes = 6;  // Toujours 6 colonnes
-        int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // Calculer le nombre de lignes en fonction du nombre de terrains
+{
+    int colonnes = 6;  // Toujours 6 colonnes
+    int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // Calculer le nombre de lignes en fonction du nombre de terrains
 
-        // Afficher chaque terrain dans une grille de 6 colonnes
-        for (int ligne = 0; ligne < lignes; ligne++)
+    // Afficher chaque terrain dans une grille de 6 colonnes
+    for (int ligne = 0; ligne < lignes; ligne++)
+    {
+        for (int col = 0; col < colonnes; col++)
         {
-            for (int col = 0; col < colonnes; col++)
+            int index = ligne * colonnes + col; // Calculer l'index du terrain
+            if (index < Terrains.Length)
             {
-                int index = ligne * colonnes + col; // Calculer l'index du terrain
-                if (index < Terrains.Length)
-                {
-                    // Afficher le terrain avec la méthode Afficher() de chaque terrain
-                    Terrains[index].Afficher(menu);
-                    Console.WriteLine(); // Espacement entre les terrains
-                }
+                // Appel corrigé : on passe menu, la grille centrale et l'index du terrain
+                Terrains[index].Afficher(menu, Grille, index);
+                Console.WriteLine(); // Espacement entre les terrains
             }
         }
     }
+}
+
+
+
+
+    
 
     // Méthode pour naviguer entre les terrains
     public void Naviguer()

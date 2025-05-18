@@ -18,6 +18,7 @@ public class Hachich : Plantes
         EsperanceDeVie = 16;
         Fruits = 5;
         EtatSante = 0.50f;
+        Emoji = "";
     }
 
     public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
@@ -47,43 +48,25 @@ public class Hachich : Plantes
 
     public override string Afficher()
     {
-        string emoji = ""; // Initialisation de la variable emoji
+        string emoji = "";
 
         if (EstVivante)
         {
-            if (CroissanceActuelle < 15)
-            {
-                emoji = "."; // Pas de croissance
-            }
-            else if (CroissanceActuelle < 35)
-            {
-                emoji = "🌱"; // Jeune pousse
-            }
-            else if (CroissanceActuelle < 50)
-            {
-                emoji = "🌿"; // Plante plus grande
-            }
-            else if (CroissanceActuelle < 75)
-            {
-                emoji = "🥦"; // Plante presque mature
-            }
-            else if (CroissanceActuelle < 90)
-            {
-                emoji = "🍃"; // Plante en pleine croissance
-            }
-            else if (CroissanceActuelle < 100)
-            {
-                emoji = "🍂"; // Plante mature
-            }
+            if (CroissanceActuelle < 15) emoji = ".";
+            else if (CroissanceActuelle < 35) emoji = "🌱";
+            else if (CroissanceActuelle < 50) emoji = "🌿";
+            else if (CroissanceActuelle < 75) emoji = "🥦";
+            else if (CroissanceActuelle < 90) emoji = "🍃";
+            else if (CroissanceActuelle < 100) emoji = "🍂";
             else if (CroissanceActuelle >= 100)
             {
                 EstVivante = false;
                 CroissanceActuelle = 0;
-                EtatSante = 0.0f; // Santé à 0 à la fin du cycle
-                emoji = "🪦"; // Plante morte
+                EtatSante = 0.0f;
+                emoji = "🪦";
             }
         }
-        
-        return emoji; // Retourner l'emoji au lieu de l'afficher
+
+        return emoji;
     }
 }

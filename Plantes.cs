@@ -31,7 +31,7 @@ public abstract class Plantes
         public int Fruits { get; protected set; } // nb de fruits et/ou légumes produits
         public float EtatSante { get; protected set; } // en pourcentage 
         public bool EstVivante {get; protected set; } //bool qui traite de la vie ou de la mort de la plante
-        
+        public string Emoji {get; protected set; }
         public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
         public abstract string Afficher();
         /*
