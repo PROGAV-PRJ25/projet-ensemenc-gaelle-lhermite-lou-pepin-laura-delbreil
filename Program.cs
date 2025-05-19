@@ -23,8 +23,23 @@ class Program
                 Jardin jardin = new Jardin(menu);
 
                 // Ex d'appel a supprimer après!!!!!
-                Hachich h = new Hachich();
-                jardin.PlanterDansGrille(2, 4, h);
+                // Hachich h = new Hachich();
+                // jardin.PlanterDansGrille(2, 4, h);
+
+                Opium o = new Opium();
+                jardin.PlanterDansGrille(1, 2, o);
+
+                ChampiHallucinogene c = new ChampiHallucinogene();
+                jardin.PlanterDansGrille(4, 5, c);
+
+                // Coca a = new Coca();
+                // jardin.PlanterDansGrille(1, 3, a);
+
+                // Khat k = new Khat();
+                // jardin.PlanterDansGrille(3, 2, k);
+
+                Salvia s = new Salvia();
+                jardin.PlanterDansGrille(3, 5, s);
 
                 // Affiche état actuel du jardin 
                 jardin.Afficher(menu);

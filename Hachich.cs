@@ -7,10 +7,7 @@ public class Hachich : Plantes
     {
         Nom = "Hachich";
         EstVivante = true;
-        EstComestible = true;
         TerrainPrefere = "terre";
-        Espacement = 30;
-        PlaceNecessaire = 0.5f;
         VitesseCroissance = 5;
         CroissanceActuelle = 0;
         BesoinEau = 2.0f;

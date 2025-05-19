@@ -60,9 +60,9 @@ public abstract class Plantes
 
     if (conditionsDangeureuses)
     {
-        EtatSante -= 0.006f;
+        EtatSante -= 0.001f;
         if (EtatSante < 0) EtatSante = 0;
-        Console.WriteLine($"{Nom} souffre de conditions défavorables (-0.006 santé).");
+        Console.WriteLine($"{Nom} souffre de conditions défavorables (-0.002 santé).");
     }
 
     // Appel pousse normale
