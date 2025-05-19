@@ -72,6 +72,4 @@
 //         if (croissanceActuelle > 100f) croissanceActuelle = 100f;
 //         age += 2; // 2 semaines par tour
 //     }
-
-    
 // }

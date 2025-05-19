@@ -18,10 +18,7 @@ using System.Dynamic;
 public abstract class Plantes
 {
      public string ?Nom { get; protected set; }
-    public bool EstComestible { get; protected set; }
     public string? TerrainPrefere { get; protected set; } // sable, terre, argile, cailloux
-    public float Espacement { get; protected set; } // en cm
-    public float PlaceNecessaire { get; protected set; } // en m²
     public float VitesseCroissance { get; protected set; } // en cm par semaine
     public float CroissanceActuelle { get; protected set; } // en cm par semaine
     public float BesoinEau { get; protected set; } // L par semaine
@@ -45,26 +42,35 @@ public abstract class Plantes
         }
     }
     
-    public void EvaluerCroissance(Saisons saison, Meteo meteo, string typeTerrain)
+   public void EvaluerCroissance(Saisons saison, Meteo meteo, string typeTerrain)
+{
+    if (!EstVivante) return;
+
+    float eau = (float)saison.TauxPrecipitation;
+    float lumiere = (float)saison.TauxSoleil;
+    float temperature = (float)saison.Temperature;
+
+    if (meteo.EvenementMeteo == "Canicule") temperature += 5;
+    if (meteo.EvenementMeteo == "Gel") temperature -= 5;
+    if (meteo.EvenementMeteo == "Pluie torrentielle") eau += 5;
+
+    // Vérifie si les conditions sont trop éloignées des besoins
+    bool conditionsDangeureuses =
+        eau < BesoinEau * 0.7f || eau > BesoinEau * 1.3f || lumiere < BesoinLumiere * 0.7f || lumiere > BesoinLumiere * 1.3f || Math.Abs(temperature - TempPreferee) > 6;
+
+    if (conditionsDangeureuses)
     {
-        if (!EstVivante) return;
-
-        // Extraire les valeurs de la saison
-        float eau = (float)saison.TauxPrecipitation;
-        float lumiere = (float)saison.TauxSoleil;
-        float temperature = (float)saison.Temperature;
-
-        // Appliquer les effets météo
-        if (meteo.EvenementMeteo == "Canicule") temperature += 5;
-        if (meteo.EvenementMeteo == "Gel") temperature -= 5;
-        if (meteo.EvenementMeteo == "Pluie torrentielle") eau += 5;
-
-        // Appel à la pousse spécifique
-        this.Pousser(eau, lumiere, temperature, typeTerrain);
-
-        // Messages spécifiques si tu veux
-        AfficherMessages();
+        EtatSante -= 0.006f;
+        if (EtatSante < 0) EtatSante = 0;
+        Console.WriteLine($"{Nom} souffre de conditions défavorables (-0.006 santé).");
     }
+
+    // Appel pousse normale
+    this.Pousser(eau, lumiere, temperature, typeTerrain);
+
+    AfficherMessages();
+}
+
 
 
 }
