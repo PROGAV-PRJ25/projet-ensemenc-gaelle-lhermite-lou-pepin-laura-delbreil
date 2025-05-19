@@ -65,4 +65,3 @@ ListeIndesirables.Add(new Indesirables("Perroquet", "🦜", "Flute", "🪈"));
 ListeIndesirables.Add(new Indesirables("Moisissures", "🧫", "VinaigreBlanc", "🍶"));
 ListeIndesirables.Add(new Indesirables("Fusariose", "🦠", "CharbonActif", "🌑"));
 ListeIndesirables.Add(new Indesirables("Oïdium", "🔬", "Ail", "🧄"));
-    
