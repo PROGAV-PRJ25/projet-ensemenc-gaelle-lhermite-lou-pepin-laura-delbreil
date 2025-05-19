@@ -1,28 +1,35 @@
+/// 
+/// 
+/// Classe pr gérer météo actuelle du jeu (événements comme gel, pluie, canicule...)
+/// 
+/// 
 public class Meteo
 {
-    public string EvenementMeteo { get; set; } //4 événements météo possible mais 1 seul à la fois
-    public int joursRestants = 0; //Ajout d'une durée des événements météo
+    // Stocke événement météo du tour (
+    public string ?EvenementMeteo { get; set; } //4 événements météo possible mais 1 seul à la fois
+    public int joursRestants = 0; //Ajout durée événements météo
 
     public Random random = new Random();
 
-    public void GenererEvenement(Saisons saison, Temporalite temporalite) //Permet de générer 4 nombres aléatoires pour les 4 événements météo
+    // Fct pr générer un événement météo aléatoire en fct de saison actuelle et état urgence
+    public void GenererEvenement(Saisons saison, Temporalite temporalite) //Permet de gén 4 nombres aléatoires pour 4 événements météo
     {
-        if (joursRestants>1){ //Pour que le jour 0 ne s'affiche pas aussi, >1
+        if (joursRestants>1){ //Pour que le jour 0 ne s'affiche pas auss >1
             joursRestants --;
-            temporalite.EtatUrgence = true; //On est en état d'urgence tant que l'événement météo est en cours
+            temporalite.EtatUrgence = true; //état d'urgence tant que événement météo en cours
             return; 
         }
         else
         {
-            saison.RemettreConditions(); //Pour revenir à la température, taux de précipitation et taux d'ensoleillement de base
+            saison.RemettreConditions(); //Pour revenir à température, précipitation et ensoleillement de base
             EvenementMeteo = "Temps normal"; //Si aucune proba, alors le temps est normal
             temporalite.EtatUrgence = false; //On est alors pas en état d'urgence
         }
         double hasard = random.Next(0,101); //Chiffre entre 0 et 100
-        if (hasard < saison.ProbaPluieTorrentielle*100){ //Vérification de la présence de pluie en le comparant au tirage hasard
+        if (hasard < saison.ProbaPluieTorrentielle*100){ //Vérification de pluie en le comparant au tirage hasard
             EvenementMeteo = "Pluie torrentielle";
             joursRestants = 1; 
-            temporalite.EtatUrgence = true; //Lors du déclenchement de l'événement, le booléen état d'urgence devient vrai
+            temporalite.EtatUrgence = true; //Lors du déclenchement de l'événement, bool->  vrai
             hasard = random.Next(0,101);
         }
         if (hasard < saison.ProbaGel*100){ //Présence de gel
@@ -44,7 +51,8 @@ public class Meteo
         }
     }
 
-    public void ModifierValeursSaison(Saisons saison) //Pour modifier les valeurs de température, taux de précipitation et taux d'ensoleillement en fonction de l'événement météo
+    // Fct pr modifier valeurs climatiques saison si urgence météo (canicule/grêle etc.)
+    public void ModifierValeursSaison(Saisons saison) //Pour modifier valeurs de température, précipitation blabla en fonction de l'événement météo
     {
         switch (EvenementMeteo) {
             case "Pluie torrentielle":

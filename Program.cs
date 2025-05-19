@@ -1,69 +1,125 @@
-//Tests de fonctionnement des classes de temmporalité, avec ajout de temps
-Temporalite temp1 = new Temporalite(DateOnly.Parse("2025-1-1")); //Parse présent pour permettre la récupération du string en format date
-Meteo meteo = new Meteo();
+﻿using System;
 
-for (int i = 0; i<25; i++){
-    meteo.GenererEvenement(temp1.SaisonActuelle, temp1); //on génére un événement météo en fonction de la saison et de la temporalité dans laquelle on est
-    if (temp1.EtatUrgence && temp1.GetType() != typeof(TempoUrgence)) // si EtatUrgence est vrai mais que l'on est pas en état d'urgence, on passe en mode urgence
-        {
-            temp1 = new TempoUrgence(temp1.DateActuelle){ //on récupère les informations des saisons de temp1
-                Ete = temp1.Ete,
-                Automne = temp1.Automne,
-                Hiver = temp1.Hiver,
-                Printemps = temp1.Printemps,
-            }; 
-        }
-     else if (temp1.EtatUrgence == false && temp1.GetType() == typeof(TempoUrgence)) // si EtatUrgence est faux mais que l'on est en état d'urgence, on passe en mode normal
-        {
-            temp1 = new Temporalite(temp1.DateActuelle){ //on récupère les informations des saisons de temp1
-                Ete = temp1.Ete,
-                Automne = temp1.Automne,
-                Hiver = temp1.Hiver,
-                Printemps = temp1.Printemps
-            }; 
-        }
-
-    if (temp1.GetType() == typeof(TempoUrgence)){ //Pour afficher le mode dans lequel on est 
-        Console.WriteLine("MODE URGENCE");
-        meteo.ModifierValeursSaison(temp1.SaisonActuelle); //Lorsqu'on est en mode urgence, on modifie les valeurs des saisons
-    }
-    else{
-        Console.WriteLine("MODE NORMAL"); 
-    }
-    Console.WriteLine();
-    Console.WriteLine(temp1);
-    Console.WriteLine(temp1.SaisonActuelle); // Pour vérifier la bonne modification des valeurs 
-    Console.WriteLine(meteo);
-    Console.WriteLine(); 
-    temp1.AvancerTemps();
-
-using System;
-
+/// <summary>
+/// 
+/// Classe principale contenant point d'entrée du programme (Main)
+/// Gère lancement jeu, menu, initialisation jardin, boucle principale des tours
+/// 
+/// </summary>
 class Program
 {
-    static void Main(string[] args)
-    {
-        // Créer une instance de Hachich
-        Hachich maPlante = new Hachich();
-
-        // Simuler plusieurs cycles de croissance
-        for (int i = 0; i < 10; i++) // 10 cycles = 20 semaines
+        // lance tout le déroulé du jeu
+        static void Main(string[] args)
         {
-            Console.Clear(); // Nettoyer l'écran à chaque tour
-                Console.WriteLine($"🌿 Cycle 🌿");
-                Console.WriteLine();
+                // Affiche intro du jeu via classe JeuEnsemence
+                JeuEnsemence jeu = new JeuEnsemence();
+                jeu.LancerMenuPrincipal();
 
-                // Paramètres environnementaux (modifiables si tu veux tester des cas)
-                float eau = 2.0f;
-                float lumiere = 9.0f;
-                float temperature = 25.0f;
-                string terrain = "terre";
+                // Lance menu pr récupérer choix (durée + nb terrains)
+                Menu menu = new Menu();
+                menu.Demarrer();
 
-                maPlante.Pousser(eau, lumiere, temperature, terrain);
-                maPlante.Afficher();
+                // Crée instance du jardin avec choix récupérés depuis menu
+                Jardin jardin = new Jardin(menu);
 
-                Console.WriteLine("\nAppuie sur une touche pour passer au cycle suivant...");
-                Console.ReadKey(); // Pause en attendant que l'utilisateur appuie sur une touche
+                // Ex d'appel a supprimer après!!!!!
+                Hachich h = new Hachich();
+                jardin.PlanterDansGrille(2, 4, h);
+
+                // Affiche état actuel du jardin 
+                jardin.Afficher(menu);
+
+                // Crée temporalité à partir d'une date fixe 
+                Temporalite temp = new Temporalite(DateOnly.Parse("2025-05-22"));
+
+                // Crée objet météo 
+                Meteo meteo = new Meteo();
+
+                // Début boucle principale (1 tour = 14j), durée selon années choisies
+                DateOnly dateFin = temp.DateDebut.AddYears(menu.DureeAnnees);
+
+
+                while (temp.DateActuelle < dateFin)
+                {
+                        Console.Clear();
+                        Console.WriteLine($"📅 Date : {temp.DateActuelle} | Saison : {temp.SaisonActuelle.Nom}");
+
+                        meteo.GenererEvenement(temp.SaisonActuelle, temp);
+
+                        if (temp.EtatUrgence && temp.GetType() != typeof(TempoUrgence))
+                        {
+                                temp = new TempoUrgence(temp.DateActuelle)
+                                {
+                                        Ete = temp.Ete,
+                                        Automne = temp.Automne,
+                                        Hiver = temp.Hiver,
+                                        Printemps = temp.Printemps,
+                                };
+                        }
+                        else if (!temp.EtatUrgence && temp.GetType() == typeof(TempoUrgence))
+                        {
+                                temp = new Temporalite(temp.DateActuelle)
+                                {
+                                        Ete = temp.Ete,
+                                        Automne = temp.Automne,
+                                        Hiver = temp.Hiver,
+                                        Printemps = temp.Printemps,
+                                };
+                        }
+
+                        Console.WriteLine(temp is TempoUrgence ? "⚠️ MODE URGENCE" : "✅ MODE NORMAL");
+
+                        for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
+                        {
+                                for (int col = 0; col < 6; col++)
+                                {
+                                        var plante = jardin.GetPlante(ligne, col);
+                                        if (plante != null)
+                                        {
+                                                string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
+                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+
+                                                if (!plante.EstVivante && plante.ToursDepuisMort == 0)
+                                                        plante.ToursDepuisMort = 1;
+                                        }
+                                }
+                        }
+
+                        jardin.Afficher(menu);
+
+                        Console.WriteLine("\nAppuyez sur Entrée pour passer au prochain tour...");
+                        Console.ReadLine();
+
+                        temp.AvancerTemps(); // Avance de 1 ou 14 jours selon mode
+                }
+
+
+                Console.WriteLine(temp is TempoUrgence ? "⚠️ MODE URGENCE" : "✅ MODE NORMAL");
+
+                for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
+                {
+                        for (int col = 0; col < 6; col++)
+                        {
+                                var plante = jardin.GetPlante(ligne, col);
+                                if (plante != null)
+                                {
+                                        string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
+                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+
+                                        if (!plante.EstVivante && plante.ToursDepuisMort == 0)
+                                                plante.ToursDepuisMort = 1;
+                                }
+                        }
+                }
+
+                // Affiche jardin en fin de tour (tous terrains avec leurs plantes)
+                jardin.Afficher(menu);
+
+                Console.WriteLine("\nAppuyez sur Entrée pour passer au prochain tour...");
+                Console.ReadLine();
+
+                // Passe au tour suivant (avance date de 14 jours)
+                temp.AvancerTemps();
         }
-    } 
-}
+    }
+

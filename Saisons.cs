@@ -1,40 +1,56 @@
+/// <summary>
+/// 
+/// Classe pr décrire caractéristiques climatiques d'une saison
+/// Utilisée pr calculer effet sur plantes : lumière, précipitations, tempé, etc.
+/// 
+/// </summary>
 public class Saisons
 {
-    public string Nom {get; set;}
-    public double TauxSoleil {get; set;} //nombre d'heures d'ensoleillement dans la journée par saison
-    public double Temperature {get; set;}
-    public double TauxPrecipitation {get; set;} //Litres par semaine
+    public string Nom { get; set; }
+    public double Temperature { get; set; } //°C moyenne sur les 4 semaines
+    public double TauxPrecipitation { get; set; } //en L/m² par semaine
+    public double TauxSoleil { get; set; } //en h/jour
+    public double ProbaGel { get; set; } //valeur entre 0 et 1
+    public double ProbaPluieTorrentielle { get; set; } //valeur entre 0 et 1
+    public double ProbaCanicule { get; set; } //valeur entre 0 et 1
+    public double ProbaSecheresse { get; set; } //valeur entre 0 et 1
 
-    private double TauxSoleilFixe {get; set;}
-    private double TemperatureFixe {get; set;}
-    private double TauxPrecipitationFixe {get; set;}
+    private double temperatureInitiale;
+    private double tauxPrecipitationInitial;
+    private double tauxSoleilInitial;
 
-    //Ajout des probas des différents événements dans le constructeur des saisons
-    public double ProbaPluieTorrentielle { get; set; } 
-    public double ProbaSecheresse { get; set; }
-    public double ProbaGel { get; set; }
-    public double ProbaCanicule { get; set; }
-
-    public Saisons(string nom, double tauxSoleil, double temperature, double tauxPrecipitation, double probaPluie, double probaSecheresse, double probaGel, double probaCanicule) //Météo bordelaise sera prise en compte pour les valeurs par saison, probabilités choisies arbitrairement
+    // init tous les paramètres climatiques de la saison
+    public Saisons(string nom, double temperature, double tauxPrecipitation, double tauxSoleil,
+                   double probaGel, double probaPluieTorrentielle, double probaCanicule, double probaSecheresse)
     {
         Nom = nom;
-        TauxSoleil = TauxSoleilFixe = tauxSoleil; 
-        TauxPrecipitation = TauxPrecipitationFixe = tauxPrecipitation; 
-        Temperature = TemperatureFixe = temperature; 
-        ProbaPluieTorrentielle = probaPluie;
-        ProbaSecheresse = probaSecheresse;
+        Temperature = temperature;
+        TauxPrecipitation = tauxPrecipitation;
+        TauxSoleil = tauxSoleil;
         ProbaGel = probaGel;
+        ProbaPluieTorrentielle = probaPluieTorrentielle;
         ProbaCanicule = probaCanicule;
+        ProbaSecheresse = probaSecheresse;
+
+        temperatureInitiale = temperature;
+        tauxPrecipitationInitial = tauxPrecipitation;
+        tauxSoleilInitial = tauxSoleil;
     }
 
-    public void RemettreConditions(){ //Pour avoir les valeurs de base pour chaque saison qui ne sont pas modifiées par les événements météo
-        TauxPrecipitation = TauxPrecipitationFixe;
-        TauxSoleil = TauxSoleilFixe; 
-        Temperature = TemperatureFixe; 
+    // Fct pr réinitialiser valeurs météo à celles d'origine de la saison
+    public void RemettreConditions()
+    {
+        Temperature = temperatureInitiale;
+        TauxPrecipitation = tauxPrecipitationInitial;
+        TauxSoleil = tauxSoleilInitial;
     }
 
+    // Redéfinit affichage sous forme lisible 
     public override string ToString()
     {
-        return $"Tempe : {Temperature}, tempe fixe : {TemperatureFixe}\nPluie : {TauxPrecipitation}, pluie fixe : {TauxPrecipitationFixe}\nsoleil : {TauxSoleil}, soleil fixe : {TauxSoleilFixe}\n";
+        return $"Saison : {Nom}\n" +
+               $"Température moyenne : {Temperature}°C\n" +
+               $"Taux de précipitation : {TauxPrecipitation} L/m²\n" +
+               $"Taux de soleil : {TauxSoleil} h/jour\n";
     }
 }

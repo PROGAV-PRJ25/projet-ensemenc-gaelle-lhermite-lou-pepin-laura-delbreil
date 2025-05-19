@@ -2,10 +2,10 @@ public class Hachich : Plantes
 {
     private float age = 0;
 
+    // valeurs de la plante (nom, préférences, vitesse de croissance...)
     public Hachich()
     {
         Nom = "Hachich";
-        //EstVivace = true;
         EstVivante = true;
         EstComestible = true;
         TerrainPrefere = "terre";
@@ -19,8 +19,11 @@ public class Hachich : Plantes
         EsperanceDeVie = 16;
         Fruits = 5;
         EtatSante = 0.50f;
+        Emoji = "";
     }
 
+    // Fct qui gère la croissance d'un Hachich en fct de l'eau, lumière, tempé, terrain
+    // Utilise EtatSante pr moduler vitesse et vérifier conditions de survie
     public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
     {
         if (!EstVivante) return;
@@ -30,7 +33,6 @@ public class Hachich : Plantes
         if (temperature >= TempPreferee - 3 && temperature <= TempPreferee + 5) EtatSante += 0.01f;
         if (typeTerrain == TerrainPrefere) EtatSante += 0.01f;
 
-        // Plafonner la santé à 1.0 maximum
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2; // saut de 2 semaines
@@ -44,84 +46,31 @@ public class Hachich : Plantes
             return;
         }
 
-
-        // Limiter la croissance à 100%
         if (CroissanceActuelle > 100f) CroissanceActuelle = 100f;
     }
 
-    public override void Afficher()
+    // Fct pr retourner l'emoji correspondant à l'état de croissance/mort de la plante
+    public override string Afficher()
     {
-        Console.WriteLine($"[{Nom}] Croissance: {CroissanceActuelle}% | Santé: {EtatSante * 100}% | Âge: {age} sem");
+        string emoji = "   ";
 
         if (EstVivante)
         {
-            if (CroissanceActuelle < 15)
-            {
-                Console.WriteLine(".");
-            }
-            else if (CroissanceActuelle < 35)
-            {
-                Console.WriteLine("🌱");
-            }
-            else if (CroissanceActuelle < 50)
-            {
-                Console.WriteLine("🌿");
-            }
-            else if (CroissanceActuelle < 75)
-            {
-                Console.WriteLine("🥦");
-            }
-            else if (CroissanceActuelle < 90)
-            {
-                Console.WriteLine("🍃");
-               
-            }
-            else if (CroissanceActuelle < 100)
-            {
-                Console.WriteLine("🍂");
-                //Console.WriteLine("Vite vite vite!!!!! ");
-            }
+            if (CroissanceActuelle < 15) emoji = " . ";
+            else if (CroissanceActuelle < 35) emoji = "🌱 ";
+            else if (CroissanceActuelle < 50) emoji = "🌿 ";
+            else if (CroissanceActuelle < 75) emoji = "🥦 ";
+            else if (CroissanceActuelle < 90) emoji = "🍃 ";
+            else if (CroissanceActuelle < 100) emoji = "🍂 ";
             else if (CroissanceActuelle >= 100)
             {
                 EstVivante = false;
                 CroissanceActuelle = 0;
-                EtatSante = 0.0f; // Santé à 0 à la fin du cycle
-                Console.WriteLine("🪦");
-                Console.WriteLine("Hachich a fini son cycle de vie");
+                EtatSante = 0.0f;
+                emoji = "🪦 ";
             }
         }
+
+        return emoji;
     }
 }
-
-/* CODE DANS PROGRAM POUR FONCTIONNER
-using System;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        // Créer une instance de Hachich
-        Hachich maPlante = new Hachich();
-
-        // Simuler plusieurs cycles de croissance
-        for (int i = 0; i < 10; i++) // 10 cycles = 20 semaines
-        {
-            Console.Clear(); // Nettoyer l'écran à chaque tour
-                Console.WriteLine($"🌿 Cycle 🌿");
-                Console.WriteLine();
-
-                // Paramètres environnementaux (modifiables si tu veux tester des cas)
-                float eau = 2.0f;
-                float lumiere = 9.0f;
-                float temperature = 25.0f;
-                string terrain = "terre";
-
-                maPlante.Pousser(eau, lumiere, temperature, terrain);
-                maPlante.Afficher();
-
-                Console.WriteLine("\nAppuie sur une touche pour passer au cycle suivant...");
-                Console.ReadKey(); // Pause en attendant que l'utilisateur appuie sur une touche
-        }
-    } 
-}
-*/
