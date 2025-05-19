@@ -32,11 +32,11 @@ public abstract class Plantes
     public float EtatSante { get; protected set; } // en pourcentage 
     public bool EstVivante { get; protected set; } // bool pr savoir si plante est vivante
     public string? Emoji { get; protected set; } // apparence de la plaaaaante
-    public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
-    public abstract string Afficher();
     public int ToursDepuisMort { get; set; } = -1;
 
     
+    public abstract void Pousser(float eau, float lumiere, float temperature, string typeTerrain);
+    public abstract string Afficher();
     public void AfficherMessages()
     {
         if (CroissanceActuelle > 75)
@@ -46,25 +46,25 @@ public abstract class Plantes
     }
     
     public void EvaluerCroissance(Saisons saison, Meteo meteo, string typeTerrain)
-{
-    if (!EstVivante) return;
+    {
+        if (!EstVivante) return;
 
-    // Extraire les valeurs de la saison
-    float eau = (float)saison.TauxPrecipitation;
-    float lumiere = (float)saison.TauxSoleil;
-    float temperature = (float)saison.Temperature;
+        // Extraire les valeurs de la saison
+        float eau = (float)saison.TauxPrecipitation;
+        float lumiere = (float)saison.TauxSoleil;
+        float temperature = (float)saison.Temperature;
 
-    // Appliquer les effets météo
-    if (meteo.EvenementMeteo == "Canicule") temperature += 5;
-    if (meteo.EvenementMeteo == "Gel") temperature -= 5;
-    if (meteo.EvenementMeteo == "Pluie torrentielle") eau += 5;
+        // Appliquer les effets météo
+        if (meteo.EvenementMeteo == "Canicule") temperature += 5;
+        if (meteo.EvenementMeteo == "Gel") temperature -= 5;
+        if (meteo.EvenementMeteo == "Pluie torrentielle") eau += 5;
 
-    // Appel à la pousse spécifique
-    this.Pousser(eau, lumiere, temperature, typeTerrain);
+        // Appel à la pousse spécifique
+        this.Pousser(eau, lumiere, temperature, typeTerrain);
 
-    // Messages spécifiques si tu veux
-    AfficherMessages();
-}
-
-
+        // Messages spécifiques si tu veux
+        AfficherMessages();
     }
+
+
+}
