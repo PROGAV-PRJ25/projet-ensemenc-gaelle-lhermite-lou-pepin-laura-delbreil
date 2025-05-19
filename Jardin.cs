@@ -1,23 +1,28 @@
+///
+///  Classe pr gérer jardin (stocke terrains + grille plantes)
+/// 
+/// 
 public class Jardin
 {
     public Terrain[] Terrains { get; private set; }
     private Plantes?[,] Grille;  // Tableau pour gérer la grille du jardin (6 colonnes)
     
-    // Constructeur
+    // crée tableau terrains + init grille plantation
     public Jardin(Menu menu)
     {
         int nombreDeTerrains = menu.NbTerrains; // Nombre de terrains (2, 4, ou 6 terrains)
-        Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker les terrains
-        Grille = new Plantes?[nombreDeTerrains, 6]; // Tableau pour gérer les plantes dans une grille de 6 colonnes
+        Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker terrains
+        Grille = new Plantes?[nombreDeTerrains, 6]; // Grille pour stocker plantes par terrain + colonne
 
         Random rand = new Random();
 
-        // Créer les terrains et les stocker dans le tableau
+        // Créer terrains et les stocker dans le tableau
+        // Boucle pr générer terrain aléatoire (terre/sable/argile)
         for (int i = 0; i < nombreDeTerrains; i++)
         {
             string[] types = { "terre", "sable", "argile" };
             string type = types[rand.Next(types.Length)];
-            string nom = $"Terrain_{i + 1}"; // Nom généré automatiquement
+            string nom = $"Terrain_{i + 1}"; // nom auto
 
             Terrains[i] = type switch
             {
@@ -28,8 +33,17 @@ public class Jardin
             };
         }
     }
+    //methode accès sécurisé
+    // Fct pr accéder plante ds grille à coord précises
+    public Plantes? GetPlante(int terrainIndex, int colonne)
+    {
+        if (terrainIndex < 0 || terrainIndex >= Terrains.Length) return null;
+        if (colonne < 0 || colonne >= 6) return null;
+        return Grille[terrainIndex, colonne];
+    }
 
     // Méthode pour planter une plante dans la grille
+    // Fct pr planter une plante à une position (ligne/colonne)
     public void PlanterDansGrille(int terrainIndex, int colonne, Plantes plante)
     {
         if (terrainIndex < 0 || terrainIndex >= Terrains.Length)
@@ -47,40 +61,36 @@ public class Jardin
         Grille[terrainIndex, colonne] = plante;
         Console.Write(Grille[terrainIndex, colonne]?.Emoji ?? " ");
 
-        Console.WriteLine($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne+1}.");
+        Console.WriteLine($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne + 1}.");
     }
 
     // Méthode pour afficher le jardin
+    // Fct pr afficher chaque terrain avec ses plantes via grille
     public void Afficher(Menu menu)
-{
-    int colonnes = 6;  // Toujours 6 colonnes
-    int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // Calculer le nombre de lignes en fonction du nombre de terrains
-
-    // Afficher chaque terrain dans une grille de 6 colonnes
-    for (int ligne = 0; ligne < lignes; ligne++)
     {
-        for (int col = 0; col < colonnes; col++)
+        int colonnes = 6;  // Toujours 6 colonnes
+        int lignes = (int)Math.Ceiling(Terrains.Length / (double)colonnes); // nb de lignes selon nb terrains
+
+        // Afficher chaque terrain dans une grille de 6 colonnes
+        for (int ligne = 0; ligne < lignes; ligne++)
         {
-            int index = ligne * colonnes + col; // Calculer l'index du terrain
-            if (index < Terrains.Length)
+            for (int col = 0; col < colonnes; col++)
             {
-                // Appel corrigé : on passe menu, la grille centrale et l'index du terrain
-                Terrains[index].Afficher(menu, Grille, index);
-                Console.WriteLine(); // Espacement entre les terrains
+                int index = ligne * colonnes + col; // index du terrain
+                if (index < Terrains.Length)
+                {
+                    // Appel : on passe menu, grille centrale et index du terrain
+                    Terrains[index].Afficher(menu, Grille, index);
+                    Console.WriteLine(); // retour à la ligne entre terrains
+                }
             }
         }
     }
-}
-
-
-
-
-    
 
     // Méthode pour naviguer entre les terrains
     public void Naviguer()
     {
-        int indexSelectionne = 0; // Terrain initialement sélectionné
+        int indexSelectionne = 0; // terrain actif
         int nbTerrains = Terrains.Length;
 
         while (true)
@@ -88,23 +98,23 @@ public class Jardin
             Console.Clear();
             Console.WriteLine($"\nTerrain sélectionné : {indexSelectionne + 1}/{nbTerrains}");
 
-            // Navigation avec les flèches directionnelles
+            // Navigation avec flèches
             var key = Console.ReadKey(true).Key;
 
             switch (key)
             {
                 case ConsoleKey.UpArrow:
                     if (indexSelectionne > 0)
-                        indexSelectionne--; // Aller vers le terrain précédent
+                        indexSelectionne--; // terrain précédent
                     break;
 
                 case ConsoleKey.DownArrow:
                     if (indexSelectionne < nbTerrains - 1)
-                        indexSelectionne++; // Aller vers le terrain suivant
+                        indexSelectionne++; // terrain suivant
                     break;
 
                 case ConsoleKey.Enter:
-                    InteragirAvecTerrain(Terrains[indexSelectionne]); // Afficher des infos sur le terrain sélectionné
+                    InteragirAvecTerrain(Terrains[indexSelectionne]); // affiche infos terrain
                     break;
             }
         }
@@ -113,10 +123,9 @@ public class Jardin
     // Afficher les détails d'un terrain
     private void InteragirAvecTerrain(Terrain terrain)
     {
-        // Afficher des informations simples sur le terrain sélectionné
         Console.WriteLine($"\nVous avez sélectionné le terrain : {terrain.Nom}");
         Console.WriteLine($"Type de sol : {terrain.TypeDeSol}");
         Console.WriteLine("Appuyez sur une touche pour revenir.");
-        Console.ReadKey(true); // Attendre que l'utilisateur appuie sur une touche pour revenir
+        Console.ReadKey(true);
     }
 }

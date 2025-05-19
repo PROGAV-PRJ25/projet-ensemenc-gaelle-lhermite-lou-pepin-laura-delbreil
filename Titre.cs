@@ -1,12 +1,12 @@
-
+/// <summary>
+/// 
+/// Classe qui gère l'affichage du menu principal du jeu ENSEMENCE
+/// Affiche titre, permet de démarrer ou de lire règles, affiche menu animé
+/// 
+/// </summary>
 public class JeuEnsemence
 {
-    public static void Main()
-    {
-        JeuEnsemence jeu = new JeuEnsemence();
-        jeu.LancerMenuPrincipal();
-    }
-
+    // Affiche titre ascii et lance menu principal 
     public void LancerMenuPrincipal()
     {
         string[] optionsMenuPrincipal = { "COMMENCER", "RÈGLES DU JEU" };
@@ -17,16 +17,17 @@ public class JeuEnsemence
 
             if (selection == 0)
             {
-                LancerJeu();
+                LancerJeu(); // Commencer partie
                 return;
             }
             else if (selection == 1)
             {
-                AfficherRegles();
+                AfficherRegles(); // Voir les règles
             }
         }
     }
 
+    // Affiche titre + intro au démarrage du jeu
     private void LancerJeu()
     {
         Console.Clear();
@@ -41,6 +42,7 @@ public class JeuEnsemence
         Console.ReadKey(true);
     }
 
+    // Affiche titre + règles complètes du jeu, centrées à l'écran
     private void AfficherRegles()
     {
         Console.Clear();
@@ -93,6 +95,7 @@ public class JeuEnsemence
         Console.ReadKey(true);
     }
 
+    // Affiche menu vertical, navigation clavier, retourne index sélectionné
     private int AfficherMenu(string[] options)
     {
         int selection = 0;
@@ -131,6 +134,7 @@ public class JeuEnsemence
         return selection;
     }
 
+    // Affiche ascii art centré représentant ENSEMENCE
     private void AfficherTitre()
     {
         string[] titre =
@@ -153,6 +157,7 @@ public class JeuEnsemence
         }
     }
 
+    // Centre un texte en console selon largeur actuelle
     private void CentrerTexte(string texte)
     {
         int largeurConsole = Console.WindowWidth;

@@ -1,22 +1,34 @@
 using System;
 
+/// 
+/// 
+/// Classe pr afficher menu interactif au joueur (choix terrains + durée jeu)
+/// 
+/// 
 public class Menu
 {
-
     private static readonly int[] nbTerrainsOptions = { 1, 4, 9 };
+    private static readonly int[] dureeAnneesOptions = { 1, 2, 3, 5, 10 };
+
     public int NbParcelles { get; private set; }
     public int NbTerrains { get; private set; }
+    public int DureeAnnees { get; private set; }
 
-
+    // Fct pr lancer menu et récupérer choix de l'utilisateur
     public void Demarrer()
-{
-  
-    int nbTerrainsIndex = Choisir("Nombre de terrains :", Array.ConvertAll(nbTerrainsOptions, x => x.ToString()));
+    {
+        // Choisir durée du jeu
+        // Appel choix durée de jeu (1 à 10 ans)
+        int dureeIndex = Choisir("🌱 Combien d'années voulez-vous que la partie dure ?", Array.ConvertAll(dureeAnneesOptions, x => x.ToString()));
+        DureeAnnees = dureeAnneesOptions[dureeIndex];
 
-    NbTerrains = nbTerrainsOptions[nbTerrainsIndex];
+        // Choisir nombre de terrains
+        // Appel choix nb de terrains (1, 4, 9)
+        int nbTerrainsIndex = Choisir("🏡 Nombre de terrains :", Array.ConvertAll(nbTerrainsOptions, x => x.ToString()));
+        NbTerrains = nbTerrainsOptions[nbTerrainsIndex];
+    }
 
-}
-
+    // Fct pr afficher question avec menu navigable (haut/bas + entrée pr valider)
     private int Choisir(string question, string[] options)
     {
         int index = 0;
@@ -39,6 +51,5 @@ public class Menu
         } while (key != ConsoleKey.Enter);
         Console.Clear();
         return index;
-        
     }
 }

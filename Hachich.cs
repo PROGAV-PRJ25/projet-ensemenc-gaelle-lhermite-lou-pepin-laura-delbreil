@@ -2,6 +2,7 @@ public class Hachich : Plantes
 {
     private float age = 0;
 
+    // valeurs de la plante (nom, préférences, vitesse de croissance...)
     public Hachich()
     {
         Nom = "Hachich";
@@ -21,6 +22,8 @@ public class Hachich : Plantes
         Emoji = "";
     }
 
+    // Fct qui gère la croissance d'un Hachich en fct de l'eau, lumière, tempé, terrain
+    // Utilise EtatSante pr moduler vitesse et vérifier conditions de survie
     public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
     {
         if (!EstVivante) return;
@@ -46,24 +49,25 @@ public class Hachich : Plantes
         if (CroissanceActuelle > 100f) CroissanceActuelle = 100f;
     }
 
+    // Fct pr retourner l'emoji correspondant à l'état de croissance/mort de la plante
     public override string Afficher()
     {
-        string emoji = "";
+        string emoji = "   ";
 
         if (EstVivante)
         {
-            if (CroissanceActuelle < 15) emoji = ".";
-            else if (CroissanceActuelle < 35) emoji = "🌱";
-            else if (CroissanceActuelle < 50) emoji = "🌿";
-            else if (CroissanceActuelle < 75) emoji = "🥦";
-            else if (CroissanceActuelle < 90) emoji = "🍃";
-            else if (CroissanceActuelle < 100) emoji = "🍂";
+            if (CroissanceActuelle < 15) emoji = " . ";
+            else if (CroissanceActuelle < 35) emoji = "🌱 ";
+            else if (CroissanceActuelle < 50) emoji = "🌿 ";
+            else if (CroissanceActuelle < 75) emoji = "🥦 ";
+            else if (CroissanceActuelle < 90) emoji = "🍃 ";
+            else if (CroissanceActuelle < 100) emoji = "🍂 ";
             else if (CroissanceActuelle >= 100)
             {
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦";
+                emoji = "🪦 ";
             }
         }
 

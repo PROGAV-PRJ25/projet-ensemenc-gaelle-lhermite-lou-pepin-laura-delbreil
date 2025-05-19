@@ -1,16 +1,22 @@
+/// <summary>
+/// 
+/// Classe abstraite pr définir base commune à tous les types de terrain
+/// Gère type de sol, nom, nb de parcelles, options d'affichage...
+/// 
+/// </summary>
 public abstract class Terrain
 {
     private static int compteurTerrains = 0;  // Compteur partagé entre tous les terrains
 
-
-    public string Couleur { get; set; } = "\x1b[48;5;240m";
+    public string Couleur { get; set; } = "\x1b[48;5;240m"; //couleur de fon des terrains
     public string? Nom { get; set; }
     public string? TypeDeSol { get; set; } // "Terre", "Sable", "Argile"
-    public bool? ALaLumiere { get; set; }
+    public bool? ALaLumiere { get; set; } 
     public bool? PourvuEnEau { get; set; }
     public bool? ProtégéContreIntrus { get; set; }
-    public int? NbParcelles { get; set; }
+    public int? NbParcelles { get; set; } // Nb Parcelles est fixe à 6 pour ce jeu
 
+    // Constructeur : initialise attributs de base du terrain (type, nom, parcelles...)
     public Terrain(string typeDeSol, int nbParcelles)
     {
         compteurTerrains++;
@@ -20,10 +26,9 @@ public abstract class Terrain
         ProtégéContreIntrus = false;
         PourvuEnEau = false;
         NbParcelles = nbParcelles;
-
-        // Supprime ou commente toute initialisation de Grille ici
     }
 
+    // Affiche contenu d'un terrain : emoji ou vide sur fond coloré
     public virtual void Afficher(Menu menu, Plantes?[,] grilleJardin, int terrainIndex)
     {
         int colonnes = 6;
@@ -36,15 +41,13 @@ public abstract class Terrain
             if (plante != null)
             {
                 string emoji = plante.Afficher();
-                // Affiche emoji avec fond coloré et espaces avant/après pour espacer
-                Console.Write($"{Couleur} {emoji} {reset}  ");
+                Console.Write($"{Couleur}{emoji}{reset}  "); //espaces pour ajuster 
             }
             else
             {
-                // Case vide avec fond coloré et 3 espaces (taille égale à emoji + espace)
-                Console.Write($"{Couleur}   {reset}  ");
+                Console.Write($"{Couleur}   {reset}  "); //idem
             }
         }
-        Console.WriteLine();  // passe à la ligne après l'affichage d'une rangée
+        Console.WriteLine();
     }
 }

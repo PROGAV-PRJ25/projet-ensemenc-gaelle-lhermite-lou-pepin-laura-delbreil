@@ -1,3 +1,9 @@
+/// <summary>
+/// 
+/// Classe pr gérer passage du temps classique dans le jeu (mode normal)
+/// Gère date, saison actuelle et changement de mode urgence si déclenché
+/// 
+/// </summary>
 public class Temporalite //Classe pour la temporalité classique
 {
     public DateOnly DateDebut{get; protected set;} //Date de départ du simulateur en format DateDebut
@@ -10,6 +16,8 @@ public class Temporalite //Classe pour la temporalité classique
     public Saisons Hiver {get; set;}
     public Saisons Printemps {get; set;}
     public bool EtatUrgence {get; set;} // vérification de si on est en état d'urgence ou pas
+
+    // Constructeur : init date, saut de temps (14j) et saisons
     public Temporalite(DateOnly dateDebut, int sautsTemps=14)
     {
         DateDebut = dateDebut; 
@@ -24,40 +32,39 @@ public class Temporalite //Classe pour la temporalité classique
         EtablirSaison();  //Permet d'établir la saison dès le premier jour de jeu
     }
 
-    public void AvancerTemps() //Permet d'avancer dans le temps dans le simulateur
-    {
-        DateActuelle = DateActuelle.AddDays(SautsTemps); //Ajout de jours
-        EtablirSaison(); //Permet de vérifier la saison à chaque avancée dans le temps
-    }
-
-    public void EtablirSaison(){
-        int anneeEnCours = DateActuelle.Year; //récupération de l'année pour avoir des saisons constantes (et pas seulement de l'année 2025)
-        DateOnly debutEte = new DateOnly (anneeEnCours, 06, 21); //21/06 = début de l'été
-        DateOnly debutAutomne = new DateOnly (anneeEnCours, 09, 21); //21/09 = début de l'automne
-        DateOnly debutHiver = new DateOnly (anneeEnCours,12,21); //21/12 = début de l'hiver
-        DateOnly debutPrintemps = new DateOnly (anneeEnCours, 03, 21); //21/03 = début du printemps
-
-        if (debutEte<=DateActuelle && DateActuelle<debutAutomne) 
-        {   
-            SaisonActuelle = Ete; 
-        } 
-        else if (debutAutomne<=DateActuelle && DateActuelle<debutHiver)
-        {   
-            SaisonActuelle = Automne;
-        } 
-        else if (debutPrintemps<=DateActuelle && DateActuelle<debutEte)
-        {   
-            SaisonActuelle = Printemps; 
-        }  
-        else
-        {   
-            SaisonActuelle = Hiver; //Mise en dernier parce que saison à cheval sur deux années
-        }       
+    // Fct pr faire avancer le temps 
     
+    public virtual void AvancerTemps() //Permet d'avancer dans le temps dans le simulateur
+    {
+        DateActuelle = DateActuelle.AddDays(SautsTemps);
+        EtablirSaison(); //A chaque tour de jeu on réévalue la saison dans laquelle on est
     }
 
+    // Fct pr définir saison actuelle selon la date courante
+    private void EtablirSaison() //Fonction pour déterminer automatiquement la saison en fonction de la date actuelle
+    {
+        int mois = DateActuelle.Month;
+        if (mois == 12 || mois == 1 || mois == 2)
+        {
+            SaisonActuelle = Hiver;
+        }
+        else if (mois >= 3 && mois <= 5)
+        {
+            SaisonActuelle = Printemps;
+        }
+        else if (mois >= 6 && mois <= 8)
+        {
+            SaisonActuelle = Ete;
+        }
+        else
+        {
+            SaisonActuelle = Automne;
+        }
+    }
+
+    // Affichage formaté des infos de date + saison courante
     public override string ToString()
     {
-        return $"Nous sommes actuellement le : {DateActuelle}. Nous sommes en cette saison : {SaisonActuelle.Nom}"; //Affichage de la date actuelle
+        return $"Nous sommes actuellement le {DateActuelle}. Nous sommes en cette saison : {SaisonActuelle.Nom}";
     }
 }
