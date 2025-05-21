@@ -6,7 +6,7 @@ public class Jardin
 {
     public Terrain[] Terrains { get; private set; }
     private Plantes?[,] Grille;  // Tableau pour gérer la grille du jardin (6 colonnes)
-    
+
     // crée tableau terrains + init grille plantation
     public Jardin(Menu menu)
     {
@@ -87,45 +87,139 @@ public class Jardin
         }
     }
 
-    // Méthode pour naviguer entre les terrains
-    public void Naviguer()
+    public void AffichageInteractif(Temporalite temp, Meteo meteo)
     {
-        int indexSelectionne = 0; // terrain actif
-        int nbTerrains = Terrains.Length;
+        int terrainIndex = 0;
+        int colonne = 0;
+        bool continuer = true;
 
-        while (true)
+        while (continuer)
         {
             Console.Clear();
-            Console.WriteLine($"\nTerrain sélectionné : {indexSelectionne + 1}/{nbTerrains}");
 
-            // Navigation avec flèches
-            var key = Console.ReadKey(true).Key;
+            // Informations générales
+            Console.WriteLine($"📅 Date : {temp.DateActuelle}");
+            Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
+            Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"}\n");
+            Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
+
+            string reset = "\x1b[0m";
+
+            // Affichage des terrains un par un (comme dans ton code original)
+            for (int i = 0; i < Terrains.Length; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    var plante = GetPlante(i, j);
+                    string emoji = plante?.Afficher() ?? "   ";
+                    bool estSelectionnee = (i == terrainIndex && j == colonne);
+
+                    if (estSelectionnee)
+                    {
+                        Console.Write("\x1b[40m" + emoji + reset + "  "); // fond noir
+                    }
+                    else
+                    {
+                        Console.Write(Terrains[i].Couleur + emoji + reset + "  ");
+                    }
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();  // retour à la ligne entre chaque terrain
+            }
+
+            // Affichage des infos de la parcelle sélectionnée
+            AfficherInfosParcelle(terrainIndex, colonne);
+
+            // Lecture de la touche
+            ConsoleKey key = Console.ReadKey(true).Key;
 
             switch (key)
             {
+                case ConsoleKey.RightArrow:
+                    colonne = (colonne + 1) % 6;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    colonne = (colonne - 1 + 6) % 6;
+                    break;
                 case ConsoleKey.UpArrow:
-                    if (indexSelectionne > 0)
-                        indexSelectionne--; // terrain précédent
+                    terrainIndex = (terrainIndex - 1 + Terrains.Length) % Terrains.Length;
                     break;
-
                 case ConsoleKey.DownArrow:
-                    if (indexSelectionne < nbTerrains - 1)
-                        indexSelectionne++; // terrain suivant
+                    terrainIndex = (terrainIndex + 1) % Terrains.Length;
                     break;
-
+                case ConsoleKey.P:
+                    GererActionParcelle(terrainIndex, colonne, "planter");
+                    break;
+                case ConsoleKey.A:
+                    GererActionParcelle(terrainIndex, colonne, "arroser");
+                    break;
                 case ConsoleKey.Enter:
-                    InteragirAvecTerrain(Terrains[indexSelectionne]); // affiche infos terrain
+                    continuer = false; // passe au tour suivant
                     break;
             }
         }
     }
 
-    // Afficher les détails d'un terrain
-    private void InteragirAvecTerrain(Terrain terrain)
+
+
+    private void AfficherInfosParcelle(int terrainIndex, int colonne)
     {
-        Console.WriteLine($"\nVous avez sélectionné le terrain : {terrain.Nom}");
-        Console.WriteLine($"Type de sol : {terrain.TypeDeSol}");
-        Console.WriteLine("Appuyez sur une touche pour revenir.");
-        Console.ReadKey(true);
+        var terrain = Terrains[terrainIndex];
+        var plante = GetPlante(terrainIndex, colonne);
+
+        Console.WriteLine("\n📍 Informations sur la parcelle sélectionnée :");
+        Console.WriteLine($"🔷 Terrain : {terrain.Nom} ({terrain.TypeDeSol})");
+        Console.WriteLine($"💧 Eau : {(terrain.PourvuEnEau == true ? "Oui" : "Non")} | ☀️ Lumière : {(terrain.ALaLumiere == true ? "Oui" : "Non")}");
+
+        if (plante == null)
+        {
+            Console.WriteLine("🌱 Aucune plante présente.");
+            Console.WriteLine("✅ Appuyez sur Entrée pour planter ici.");
+        }
+        else
+        {
+            Console.WriteLine($"🌿 Plante : {plante.Nom}");
+            Console.WriteLine($"📈 Croissance : {plante.CroissanceActuelle} cm");
+            Console.WriteLine($"❤️ Santé : {(int)(plante.EtatSante * 100)}%");
+            Console.WriteLine($"🧬 Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
+            Console.WriteLine("💦 Appuyez sur Entrée pour arroser (simulation).");
+        }
     }
+
+    private void GererActionParcelle(int terrainIndex, int colonne, string action)
+    {
+        var plante = GetPlante(terrainIndex, colonne);
+
+        if (action == "planter")
+        {
+            if (plante == null)
+            {
+                Console.WriteLine("\n🌱 Plantation en cours...");
+                PlanterDansGrille(terrainIndex, colonne, new Hachich());
+            }
+            else
+            {
+                Console.WriteLine("\n❌ Une plante est déjà présente !");
+            }
+        }
+        else if (action == "arroser")
+        {
+            if (plante != null)
+            {
+                Console.WriteLine("\n💦 Vous avez arrosé la plante ! (effet à coder si besoin)");
+                // Tu peux ajouter ici un effet si tu veux (ex: +santé)
+            }
+            else
+            {
+                Console.WriteLine("\n❌ Pas de plante à arroser !");
+            }
+        }
+
+        Thread.Sleep(1000); // petite pause
+    }
+
+
+
+
 }

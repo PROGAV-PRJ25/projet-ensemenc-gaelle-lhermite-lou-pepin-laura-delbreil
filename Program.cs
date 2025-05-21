@@ -19,12 +19,8 @@ class Program
                 Menu menu = new Menu();
                 menu.Demarrer();
 
-                // Crée instance du jardin avec choix récupérés depuis menu
+                // Juste après la création du jardin :
                 Jardin jardin = new Jardin(menu);
-
-                // Ex d'appel a supprimer après!!!!!
-                Hachich h = new Hachich();
-                jardin.PlanterDansGrille(2, 4, h);
 
                 // Affiche état actuel du jardin 
                 jardin.Afficher(menu);
@@ -38,11 +34,18 @@ class Program
                 // Début boucle principale (1 tour = 14j), durée selon années choisies
                 DateOnly dateFin = temp.DateDebut.AddYears(menu.DureeAnnees);
 
+                // >>> AJOUT POUR TESTER AFFICHAGE INTERACTIF <<<
+                // Tu peux mettre ça TEMPORAIREMENT si tu veux tester :
+                jardin.AffichageInteractif(temp, meteo);
+
 
                 while (temp.DateActuelle < dateFin)
                 {
+                        jardin.AffichageInteractif(temp, meteo);
+
+
                         Console.Clear();
-                        Console.WriteLine($"📅 Date : {temp.DateActuelle} | Saison : {temp.SaisonActuelle.Nom}");
+
 
                         meteo.GenererEvenement(temp.SaisonActuelle, temp);
 
@@ -67,8 +70,6 @@ class Program
                                 };
                         }
 
-                        Console.WriteLine(temp is TempoUrgence ? "⚠️ MODE URGENCE" : "✅ MODE NORMAL");
-
                         for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
                         {
                                 for (int col = 0; col < 6; col++)
@@ -84,8 +85,6 @@ class Program
                                         }
                                 }
                         }
-
-                        jardin.Afficher(menu);
 
                         Console.WriteLine("\nAppuyez sur Entrée pour passer au prochain tour...");
                         Console.ReadLine();
