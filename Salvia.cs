@@ -1,43 +1,41 @@
-public class Hachich : PlanteVivace
+public class Salvia : PlanteVivace
 {
 
-    // valeurs de la plante (nom, préférences, vitesse de croissance...)
-    public Hachich()
+    // valeurs spécifiques à la plante salvia
+    public Salvia()
     {
-        Nom = "Hachich";
+        Nom = "Salvia";
         EstVivante = true;
-        TerrainPrefere = "terre";
-        VitesseCroissance = 5;
+        TerrainPrefere = "argile";
+        VitesseCroissance = 4.0f;
         CroissanceActuelle = 0;
-        BesoinEau = 2.0f;
-        BesoinLumiere = 8.0f;
-        TempPreferee = 25;
-        EsperanceDeVie = 16;
-        Fruits = 5;
-        EtatSante = 0.50f;
+        BesoinEau = 3.0f;
+        BesoinLumiere = 6.0f;
+        TempPreferee = 22;
+        EsperanceDeVie = 14;
+        Fruits = 2;
+        EtatSante = 0.65f;
         Emoji = "";
     }
 
-    // Fct qui gère la croissance d'un Hachich en fct de l'eau, lumière, tempé, terrain
-    // Utilise EtatSante pr moduler vitesse et vérifier conditions de survie
     public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
-        if (eau >= BesoinEau) EtatSante += 0.01f;
+        if (eau >= BesoinEau) EtatSante += 0.005f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.01f;
-        if (temperature >= TempPreferee - 3 && temperature <= TempPreferee + 5) EtatSante += 0.01f;
-        if (typeTerrain == TerrainPrefere) EtatSante += 0.01f;
+        if (temperature >= TempPreferee - 2 && temperature <= TempPreferee + 4) EtatSante += 0.005f;
+        if (typeTerrain == TerrainPrefere) EtatSante += 0.003f;
 
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
-        age += 2; // saut de 2 semaines
+        age += 2;
         CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
 
-        if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
+        if ((EtatSante < 0.4f) || (age > EsperanceDeVie))
         {
             EstVivante = false;
-            EtatSante = 0.0f; // Mettre santé à 0
+            EtatSante = 0.0f;
             Console.WriteLine($"{Nom} est morte.");
             return;
         }
@@ -45,7 +43,6 @@ public class Hachich : PlanteVivace
         if (CroissanceActuelle > 100f) CroissanceActuelle = 100f;
     }
 
-    // Fct pr retourner l'emoji correspondant à l'état de croissance/mort de la plante
     public override string Afficher()
     {
         string emoji = "   ";
@@ -55,10 +52,10 @@ public class Hachich : PlanteVivace
             if (CroissanceActuelle < 15) emoji = " . ";
             else if (CroissanceActuelle < 35) emoji = "🌱 ";
             else if (CroissanceActuelle < 50) emoji = "🌿 ";
-            else if (CroissanceActuelle < 75) emoji = "🥦 ";
-            else if (CroissanceActuelle < 90) emoji = "🍃 ";
+            else if (CroissanceActuelle < 75) emoji = "☘️  ";
+            else if (CroissanceActuelle < 90) emoji = "🍀 ";
             else if (CroissanceActuelle < 100) emoji = "🍂 ";
-            else if (CroissanceActuelle >= 100)
+            else
             {
                 EstVivante = false;
                 CroissanceActuelle = 0;

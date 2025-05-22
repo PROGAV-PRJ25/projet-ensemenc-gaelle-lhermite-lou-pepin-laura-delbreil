@@ -28,6 +28,8 @@ class Program
                 // Crée temporalité à partir d'une date fixe 
                 Temporalite temp = new Temporalite(DateOnly.Parse("2025-05-22"));
 
+
+
                 // Crée objet météo 
                 Meteo meteo = new Meteo();
 
@@ -78,7 +80,7 @@ class Program
                                         if (plante != null)
                                         {
                                                 string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
 
                                                 if (!plante.EstVivante && plante.ToursDepuisMort == 0)
                                                         plante.ToursDepuisMort = 1;
@@ -103,7 +105,7 @@ class Program
                                 if (plante != null)
                                 {
                                         string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
 
                                         if (!plante.EstVivante && plante.ToursDepuisMort == 0)
                                                 plante.ToursDepuisMort = 1;
@@ -119,6 +121,7 @@ class Program
 
                 // Passe au tour suivant (avance date de 14 jours)
                 temp.AvancerTemps();
+
         }
     }
 
