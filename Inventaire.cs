@@ -20,8 +20,10 @@ public class Inventaire
     public void SelectionnerObjet(string objet)
     {
         for (int i = 0; i<ObjetsPossedes.Count; i++){
-            if (ObjetsPossedes[i].Nom == objet){
+            if (ObjetsPossedes[i].Nom == objet) 
+            {
                 ObjetSelectionne = objet;
+                UtiliserObjet(ObjetSelectionne); 
             }
         }
     }
@@ -31,7 +33,8 @@ public class Inventaire
     {
         if (objet != null){
             for (int i = 0; i<ObjetsPossedes.Count; i++){
-                if (ObjetsPossedes[i].Nom == objet){
+                if (ObjetsPossedes[i].Nom == objet)
+                {
                     ObjetSelectionne = null;
                 }
             }

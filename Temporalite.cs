@@ -24,10 +24,10 @@ public class Temporalite //Classe pour la temporalité classique
         DateActuelle = dateDebut; 
         SautsTemps = sautsTemps;
         SaisonActuelle = new Saisons ("Saison",5,5,5, 0,0,0,0);
-        Ete = new Saisons("Ete",9.4,21,13,0.1,0.4,0,0.5); //9.4h de soleil, 21 degrés en moyenne, 13L d'eau par semaine/m², probaPluie = 0.1, probaSecheresse = 0.4, probaGel = 0, probaCanicule = 0.5
-        Automne = new Saisons("Automne",5.6,11,18,0.3,0.1,0.1,0.0); //5.6h de soleil, 11 degrés en moyenne, 18L d'eau par semaine/m², probaPluie = 0.3, probaSecheresse = 0.1, probaGel = 0.1, probaCanicule = 0 
-        Hiver = new Saisons("Hiver",5.7,7,14,0.2,0,0.5,0); //5.7h de soleil, 7 degrés en moyenne, 14L d'eau par semaine/m², probaPluie = 0.2, probaSecheresse = 0, probaGel = 0.5, probaCanicule = 0  
-        Printemps = new Saisons("Printemps",9,16,16,0.2,0.1,0.2,0.1); //9h de soleil, 16 degrés en moyenne, 16L d'eau par semaine/m², probaPluie = 0.2, probaSecheresse = 0.1, probaGel = 0.2, probaCanicule = 0.1
+        Ete = new Saisons("Ete",10.5,32,1,0.02,0.1,0,0.1); //10.5h de soleil, 32 degrés en moyenne, 1L d'eau par semaine/m², probaPluie = 0.02, probaSecheresse = 0.1, probaGel = 0, probaCanicule = 0.1
+        Automne = new Saisons("Automne",5.6,22,3.5,0.1,0.03,0.04,0.0); //5.6h de soleil, 22 degrés en moyenne, 3.5L d'eau par semaine/m², probaPluie = 0.1, probaSecheresse = 0.03, probaGel = 0.04, probaCanicule = 0 
+        Hiver = new Saisons("Hiver",5.7,10,2.6,0.06,0,0.1,0); //5.7h de soleil, 10 degrés en moyenne, 2.6L d'eau par semaine/m², probaPluie = 0.06, probaSecheresse = 0, probaGel = 0.1, probaCanicule = 0  
+        Printemps = new Saisons("Printemps",9,25,2, 0.05,0.05,0.05,0.03); //9h de soleil, 25 degrés en moyenne, 2L d'eau par semaine/m², probaPluie = 0.05, probaSecheresse = 0.05, probaGel = 0.05, probaCanicule = 0.03
         EtatUrgence = false; 
         EtablirSaison();  //Permet d'établir la saison dès le premier jour de jeu
     }

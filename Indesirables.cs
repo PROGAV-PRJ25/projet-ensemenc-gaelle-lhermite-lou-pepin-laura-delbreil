@@ -38,14 +38,14 @@ public class Indesirables
     //Fct pour générer la liste complète d'indésirables
     public List<Indesirables> GenererIndesirables(Menu menu)
     {
-        ListeIndesirables.Add(new Indesirables("Policier", "👮", "PistoletEau", "🔫", 1, menu));
-        ListeIndesirables.Add(new Indesirables("Chien renifleur", "🐶", "Steak", "🥩", 0.09, menu));
-        ListeIndesirables.Add(new Indesirables("Voleur adverse", "🕵️ ", "Cameras", "📸", 0.08, menu));
-        ListeIndesirables.Add(new Indesirables("Rats", "🐀", "Fromage", "🧀", 0.07, menu));
-        ListeIndesirables.Add(new Indesirables("Perroquet", "🦜", "Flute", "🪈", 0.06, menu));
-        ListeIndesirables.Add(new Indesirables("Moisissures", "🧫", "VinaigreBlanc", "🍶", 0.05, menu));
-        ListeIndesirables.Add(new Indesirables("Fusariose", "🦠", "CharbonActif", "🌑", 0.04, menu));
-        ListeIndesirables.Add(new Indesirables("Oïdium", "🔬", "Ail", "🧄", 0.03, menu));
+        ListeIndesirables.Add(new Indesirables("Policier", "👮", "PistoletEau", "🔫", 0.08, menu));
+        ListeIndesirables.Add(new Indesirables("Chien renifleur", "🐶", "Steak", "🥩", 0.07, menu));
+        ListeIndesirables.Add(new Indesirables("Voleur adverse", "🕵️ ", "Cameras", "📸", 0.06, menu));
+        ListeIndesirables.Add(new Indesirables("Rats", "🐀", "Fromage", "🧀", 0.05, menu));
+        ListeIndesirables.Add(new Indesirables("Perroquet", "🦜", "Flute", "🪈", 0.04, menu));
+        ListeIndesirables.Add(new Indesirables("Moisissures", "🧫", "VinaigreBlanc", "🍶", 0.03, menu));
+        ListeIndesirables.Add(new Indesirables("Fusariose", "🦠", "CharbonActif", "🌑", 0.02, menu));
+        ListeIndesirables.Add(new Indesirables("Oïdium", "🔬", "Ail", "🧄", 0.01, menu));
         return ListeIndesirables;
     }
 
@@ -54,7 +54,7 @@ public class Indesirables
     {
         if (IndesirableActuel == null) //Si aucun indésirable actuel
         {
-            Apparition();
+            Apparition(temporalite);
         }
         else
         {
@@ -63,15 +63,17 @@ public class Indesirables
     }
 
     //Fct pour faire apparaître les indésirables selon leur proba d'apparition
-    public void Apparition()
+    public void Apparition(Temporalite temporalite)
     {
+        double hasard = random.Next(0, 100);
         for (int i = 0; i < ListeIndesirables.Count; i++)
         {
-            double hasard = random.Next(0, 100);
             if (hasard < ListeIndesirables[i].ProbaApparition * 100) //Si proba plus faible que leur proba d'apparition, alors ils apparaissent
             {
                 ListeIndesirables[i].EstPresent = true;
                 IndesirableActuel = ListeIndesirables[i];
+                temporalite.EtatUrgence = true;
+                IndesirableActuel.LigneTerrain = random.Next(0, NbTerrains);
             }
         }  
     }
@@ -90,8 +92,9 @@ public class Indesirables
             DiffusionPartout(jardin);//si tout le terrain a été touché par l'intrus ou la maladie, tous les terrains sont touchés par l'effet, l'indésirable est supprimé, et le joueur peut reprendre en mode classique
             temporalite.EtatUrgence = false; //On est plus en état d'urgence car tout a disparu
             IndesirableActuel.EstPresent = false; //Indésirable disparait
-            IndesirableActuel.ColonneActuelle = 0; 
-            IndesirableActuel = null; 
+            IndesirableActuel.ColonneActuelle = 0;
+            IndesirableActuel = null;
+            temporalite.EtatUrgence = false; 
         }
         else
         {
@@ -120,12 +123,15 @@ public class Indesirables
 
     //Fct pour faire partir l'indésirable en utilisant un objet
     public void FairePartir(Inventaire inventaire){
-        if (inventaire.ObjetSelectionne == Solution){ //si l'objet sélectionné est la solution pour se débarasser de cet indésirable, alors on l'utilise sur lui et on fait disparaitre l'indésirable
+        inventaire.SelectionnerObjet(inventaire.ObjetSelectionne); 
+        if (inventaire.ObjetSelectionne == Solution)
+        { //si l'objet sélectionné est la solution pour se débarasser de cet indésirable, alors on l'utilise sur lui et on fait disparaitre l'indésirable
             inventaire.UtiliserObjet(inventaire.ObjetSelectionne); //Appel d'une méthode pour utiliser l'objet présente dans inventaire
             EstPresent = false; //Indésirable n'est plus présent 
             Console.WriteLine("Bravo vous avez fait partir l'indésirable !!");
         }
-        else{
+        else
+        {
             Console.WriteLine("Raté... cet objet ne vous sera d'aucune utilité...");
         }
     }

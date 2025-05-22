@@ -188,11 +188,11 @@ public class Jardin
                     bool estSelectionnee = (i == terrainIndex && j == colonne);
                     if (estSelectionnee)
                     {
-                        Console.Write("\x1b[40m" + emoji + icone + reset + "  ");
+                        Console.Write("\x1b[40m" + emoji + icone + " " + reset + "  ");
                     }
                     else
                     {
-                        Console.Write(Terrains[i].Couleur + emoji + icone + reset + "  ");
+                        Console.Write(Terrains[i].Couleur + emoji + icone + " " +reset + "  ");
                     }
                     
 
@@ -395,11 +395,11 @@ public class Jardin
                 }
                 if (estSelectionnee)
                 {
-                    Console.Write("\x1b[40m" + emoji + icone + reset + "  ");
+                    Console.Write("\x1b[40m" + emoji + icone + " " + reset + "  ");
                 }
                 else
                 {
-                    Console.Write(Terrains[i].Couleur + emoji + icone + reset + "  ");
+                    Console.Write(Terrains[i].Couleur + emoji + icone  + " " +reset + "  ");
                 }
             }
 
