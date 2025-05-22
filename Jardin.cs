@@ -51,7 +51,7 @@ public class Jardin
             Console.WriteLine("Erreur : index de terrain hors limites.");
             return;
         }
-        if (colonne < 0 || colonne >= 5)
+        if (colonne < 0 || colonne >= 6)
         {
             Console.WriteLine("Erreur : colonne hors limites.");
             return;
@@ -63,6 +63,37 @@ public class Jardin
 
         Console.WriteLine($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne + 1}.");
     }
+
+    public void PlanterAutoGrille(int terrainIndex, int colonne, Plantes plante, DateOnly dateActuelle)
+    {
+        if (plante is PlanteVivace vivace)
+        {
+            vivace.InitialiserPlantation(dateActuelle); // initialise pour repousse
+        }
+
+        PlanterDansGrille(terrainIndex, colonne, plante);
+    }
+
+public void ReplanterVivaces(DateOnly dateActuelle)
+{
+    for (int ligne = 0; ligne < Terrains.Length; ligne++)
+    {
+        for (int col = 0; col < 6; col++)
+        {
+            var plante = GetPlante(ligne, col);
+            if (plante is PlanteVivace vivace && vivace.PretAPousser(dateActuelle))
+            {
+                Console.WriteLine($"🌿 {plante.Nom} repousse automatiquement à [{ligne},{col}] !");
+                vivace.EstVivante = true;
+                vivace.EtatSante = 0.5f;
+                vivace.CroissanceActuelle = 0;
+                vivace.DatePlantation = dateActuelle;
+                vivace.DateReplantation = dateActuelle.AddYears(1);
+            }
+        }
+    }
+}
+
 
     // Méthode pour afficher le jardin
     // Fct pr afficher chaque terrain avec ses plantes via grille
