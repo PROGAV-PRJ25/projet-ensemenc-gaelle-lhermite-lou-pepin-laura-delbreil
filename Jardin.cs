@@ -8,6 +8,8 @@ public class Jardin
     private Plantes?[,] Grille;// Tableau pour gérer la grille du jardin (6 colonnes)
     private float[,] EauParcelle; // eau en litres
     private int[,] LumiereParcelle;
+    public List<Indesirables> IndesirablesDansJardin { get; set; } = new List<Indesirables>();
+
 
 
     // crée tableau terrains + init grille plantation
@@ -95,25 +97,25 @@ public class Jardin
         PlanterDansGrille(terrainIndex, colonne, plante);
     }
 
-public void ReplanterVivaces(DateOnly dateActuelle)
-{
-    for (int ligne = 0; ligne < Terrains.Length; ligne++)
+    public void ReplanterVivaces(DateOnly dateActuelle)
     {
-        for (int col = 0; col < 6; col++)
+        for (int ligne = 0; ligne < Terrains.Length; ligne++)
         {
-            var plante = GetPlante(ligne, col);
-            if (plante is PlanteVivace vivace && vivace.PretAPousser(dateActuelle))
+            for (int col = 0; col < 6; col++)
             {
-                Console.WriteLine($"🌿 {plante.Nom} repousse automatiquement à [{ligne},{col}] !");
-                vivace.EstVivante = true;
-                vivace.EtatSante = 0.5f;
-                vivace.CroissanceActuelle = 0;
-                vivace.DatePlantation = dateActuelle;
-                vivace.DateReplantation = dateActuelle.AddYears(1);
+                var plante = GetPlante(ligne, col);
+                if (plante is PlanteVivace vivace && vivace.PretAPousser(dateActuelle))
+                {
+                    Console.WriteLine($"🌿 {plante.Nom} repousse automatiquement à [{ligne},{col}] !");
+                    vivace.EstVivante = true;
+                    vivace.EtatSante = 0.5f;
+                    vivace.CroissanceActuelle = 0;
+                    vivace.DatePlantation = dateActuelle;
+                    vivace.DateReplantation = dateActuelle.AddYears(1);
+                }
             }
         }
     }
-}
 
 
     // Méthode pour afficher le jardin
@@ -137,6 +139,16 @@ public void ReplanterVivaces(DateOnly dateActuelle)
                 }
             }
         }
+
+        Console.WriteLine("\n--- INDESIRABLES DANS LE JARDIN ---");
+        foreach (var ind in IndesirablesDansJardin)
+        {
+        if (ind.EstPresent)
+        {
+            Console.WriteLine($"🔸 {ind.Nom} {ind.Icone} sur le terrain {ind.LigneTerrain}, colonne {ind.ColonneActuelle}");
+        }
+        }
+
     }
 
     public void AffichageInteractif(Temporalite temp, Meteo meteo)
@@ -162,12 +174,28 @@ public void ReplanterVivaces(DateOnly dateActuelle)
                 {
                     var plante = GetPlante(i, j);
                     string emoji = plante?.Afficher() ?? "   ";
-                    bool estSelectionnee = (i == terrainIndex && j == colonne);
 
-                    if (estSelectionnee)
-                        Console.Write("\x1b[40m" + emoji + reset + "  ");
+                    string icone; 
+                    var indesirable = Indesirables.IndesirableActuel;
+                    if (indesirable != null && indesirable.EstPresent && indesirable.LigneTerrain == i && indesirable.ColonneActuelle == j)
+                    {
+                        icone = indesirable.Icone;
+                    }
                     else
-                        Console.Write(Terrains[i].Couleur + emoji + reset + "  ");
+                    {
+                        icone = "  ";
+                    }
+                    bool estSelectionnee = (i == terrainIndex && j == colonne);
+                    if (estSelectionnee)
+                    {
+                        Console.Write("\x1b[40m" + emoji + icone + reset + "  ");
+                    }
+                    else
+                    {
+                        Console.Write(Terrains[i].Couleur + emoji + icone + reset + "  ");
+                    }
+                    
+
                 }
 
                 Console.WriteLine();
@@ -230,6 +258,9 @@ public void ReplanterVivaces(DateOnly dateActuelle)
             Console.WriteLine($"Croissance : {plante.CroissanceActuelle} cm");
             Console.WriteLine($"Santé : {(int)(plante.EtatSante * 100)}%");
             Console.WriteLine($"Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
+            Console.WriteLine($"\n📋 BESOINS de {plante.Nom} :");
+            Console.WriteLine($"Eau : {plante.BesoinEau} L/semaine");
+            Console.WriteLine($"Lumière : {plante.BesoinLumiere} h/jour");
         }
     }
 
@@ -243,7 +274,7 @@ public void ReplanterVivaces(DateOnly dateActuelle)
             if (plante == null)
             {
                 int indexSelection = 0;
-                string[] plantesDispo = { "Hachich" };
+                string[] plantesDispo = { "Hachich", "Coca", "Opium", "Salvia", "Khat", "Champi hallucinogène" };
 
                 bool enSelection = true;
                 while (enSelection)
@@ -271,14 +302,25 @@ public void ReplanterVivaces(DateOnly dateActuelle)
 
                         Console.WriteLine($"\n🌿 Plante sélectionnée : {plantesDispo[indexSelection]}\n");
 
-                        if (plantesDispo[indexSelection] == "Hachich")
+                        Plantes? planteChoisie = plantesDispo[indexSelection] switch
                         {
-                            var planteChoisie = new Hachich();
+                            "Hachich" => new Hachich(),
+                            "Coca" => new Coca(),
+                            "Opium" => new Opium(),
+                            "Salvia" => new Salvia(),
+                            "Khat" => new Khat(),
+                            "Champi hallucinogène" => new ChampiHallucinogene(),
+                            _ => null
+                        };
+
+                        if (planteChoisie != null)
+                        {
+                            Console.WriteLine($"Terrain favorable : {planteChoisie.TerrainPrefere}");
                             Console.WriteLine($"Besoin d’eau : {planteChoisie.BesoinEau} L/semaine");
                             Console.WriteLine($"Besoin lumière : {planteChoisie.BesoinLumiere} h/jour");
                             Console.WriteLine($"Temp. idéale : {planteChoisie.TempPreferee} °C");
                             Console.WriteLine($"Espérance de vie : {planteChoisie.EsperanceDeVie} sem.");
-                            Console.WriteLine("\n✅ Entrée pour semer | Échap pour revenir");
+                            Console.WriteLine("\n Entrée pour semer | Échap pour revenir");
 
                             var key2 = Console.ReadKey(true).Key;
                             if (key2 == ConsoleKey.Enter)
@@ -341,13 +383,23 @@ public void ReplanterVivaces(DateOnly dateActuelle)
                 string emoji = plante?.Afficher() ?? "   ";
                 bool estSelectionnee = (i == terrainIndex && j == colonne);
 
-                if (estSelectionnee)
+                string icone; 
+                var indesirable = Indesirables.IndesirableActuel;
+                if (indesirable != null && indesirable.EstPresent && indesirable.LigneTerrain == i && indesirable.ColonneActuelle == j)
                 {
-                    Console.Write("\x1b[40m" + emoji + reset + "  ");
+                    icone = indesirable.Icone;
                 }
                 else
                 {
-                    Console.Write(Terrains[i].Couleur + emoji + reset + "  ");
+                    icone = "  ";
+                }
+                if (estSelectionnee)
+                {
+                    Console.Write("\x1b[40m" + emoji + icone + reset + "  ");
+                }
+                else
+                {
+                    Console.Write(Terrains[i].Couleur + emoji + icone + reset + "  ");
                 }
             }
 
@@ -405,5 +457,7 @@ public void ReplanterVivaces(DateOnly dateActuelle)
     {
         return LumiereParcelle[terrainIndex, colonne];
     }
+    
+    
 
 }

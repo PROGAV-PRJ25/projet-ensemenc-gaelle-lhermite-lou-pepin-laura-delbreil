@@ -17,7 +17,6 @@ public class JeuEnsemence
 
             if (selection == 0)
             {
-                LancerJeu(); // Commencer partie
                 return;
             }
             else if (selection == 1)
@@ -25,21 +24,6 @@ public class JeuEnsemence
                 AfficherRegles(); // Voir les règles
             }
         }
-    }
-
-    // Affiche titre + intro au démarrage du jeu
-    private void LancerJeu()
-    {
-        Console.Clear();
-        AfficherTitre();
-
-        Console.WriteLine("\nBienvenue dans le jeu !");
-        Console.WriteLine("\nLe jeu commence... (simulation)\n");
-
-        // Logique du jeu à insérer ici !!!!
-
-        Console.WriteLine("Appuyez sur une touche pour quitter le programme.");
-        Console.ReadKey(true);
     }
 
     // Affiche titre + règles complètes du jeu, centrées à l'écran

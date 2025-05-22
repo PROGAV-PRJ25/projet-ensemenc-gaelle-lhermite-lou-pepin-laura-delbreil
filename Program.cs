@@ -54,6 +54,7 @@ class Program
 
 
                         meteo.GenererEvenement(temp.SaisonActuelle, temp);
+                        indesirable.GererIndesirables(jardin, temp);
 
                         if (temp.EtatUrgence && temp.GetType() != typeof(TempoUrgence))
                         {
