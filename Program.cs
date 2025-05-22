@@ -117,12 +117,6 @@ class Program
                         }
                 }
 
-                // Affiche jardin en fin de tour (tous terrains avec leurs plantes)
-                jardin.Afficher(menu);
-
-                Console.WriteLine("\nAppuyez sur Entrée pour passer au prochain tour...");
-                Console.ReadLine();
-
                 // Passe au tour suivant (avance date de 14 jours)
                 temp.AvancerTemps();
 
