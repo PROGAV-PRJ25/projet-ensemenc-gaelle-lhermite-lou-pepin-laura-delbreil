@@ -19,7 +19,7 @@ public class Coca : Plantes
         Emoji = "";
     }
 
-    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
+    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
@@ -31,7 +31,7 @@ public class Coca : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * EtatSante;
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {

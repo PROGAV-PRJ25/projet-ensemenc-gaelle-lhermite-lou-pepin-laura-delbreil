@@ -1,6 +1,5 @@
-public class Salvia : Plantes
+public class Salvia : PlanteVivace
 {
-    private float age = 0;
 
     // valeurs spécifiques à la plante salvia
     public Salvia()
@@ -15,11 +14,11 @@ public class Salvia : Plantes
         TempPreferee = 22;
         EsperanceDeVie = 14;
         Fruits = 2;
-        EtatSante = 0.45f;
+        EtatSante = 0.65f;
         Emoji = "";
     }
 
-    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
+    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
@@ -31,7 +30,7 @@ public class Salvia : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
 
         if ((EtatSante < 0.4f) || (age > EsperanceDeVie))
         {
@@ -53,7 +52,7 @@ public class Salvia : Plantes
             if (CroissanceActuelle < 15) emoji = " . ";
             else if (CroissanceActuelle < 35) emoji = "🌱 ";
             else if (CroissanceActuelle < 50) emoji = "🌿 ";
-            else if (CroissanceActuelle < 75) emoji = "☘️ ";
+            else if (CroissanceActuelle < 75) emoji = "☘️  ";
             else if (CroissanceActuelle < 90) emoji = "🍀 ";
             else if (CroissanceActuelle < 100) emoji = "🍂 ";
             else

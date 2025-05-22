@@ -1,6 +1,5 @@
-public class Hachich : Plantes
+public class Hachich : PlanteVivace
 {
-    private float age = 0;
 
     // valeurs de la plante (nom, préférences, vitesse de croissance...)
     public Hachich()
@@ -21,7 +20,7 @@ public class Hachich : Plantes
 
     // Fct qui gère la croissance d'un Hachich en fct de l'eau, lumière, tempé, terrain
     // Utilise EtatSante pr moduler vitesse et vérifier conditions de survie
-    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
+    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
@@ -33,7 +32,7 @@ public class Hachich : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2; // saut de 2 semaines
-        CroissanceActuelle += VitesseCroissance * 4 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {

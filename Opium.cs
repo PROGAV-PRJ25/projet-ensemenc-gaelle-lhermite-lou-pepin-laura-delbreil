@@ -15,12 +15,12 @@ public class Opium : Plantes
         TempPreferee = 22;
         EsperanceDeVie = 24; // durée plus longue que Hachich
         Fruits = 3;
-        EtatSante = 0.45f;
+        EtatSante = 0.65f;
         Emoji = "";
     }
 
     // Fct qui gère croissance d'un Opium en fct de conditions météo
-    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
+    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
@@ -63,7 +63,7 @@ public class Opium : Plantes
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦 ";
+                emoji = "🪦  ";
             }
         }
 

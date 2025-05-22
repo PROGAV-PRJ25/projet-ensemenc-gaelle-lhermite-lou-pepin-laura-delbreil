@@ -22,30 +22,13 @@ class Program
                 // Crée instance du jardin avec choix récupérés depuis menu
                 Jardin jardin = new Jardin(menu);
 
-                // Ex d'appel a supprimer après!!!!!
-                // Hachich h = new Hachich();
-                // jardin.PlanterDansGrille(2, 4, h);
-
-                Opium o = new Opium();
-                jardin.PlanterDansGrille(1, 2, o);
-
-                ChampiHallucinogene c = new ChampiHallucinogene();
-                jardin.PlanterDansGrille(4, 5, c);
-
-                // Coca a = new Coca();
-                // jardin.PlanterDansGrille(1, 3, a);
-
-                // Khat k = new Khat();
-                // jardin.PlanterDansGrille(3, 2, k);
-
-                Salvia s = new Salvia();
-                jardin.PlanterDansGrille(3, 5, s);
-
                 // Affiche état actuel du jardin 
                 jardin.Afficher(menu);
 
                 // Crée temporalité à partir d'une date fixe 
                 Temporalite temp = new Temporalite(DateOnly.Parse("2025-05-22"));
+
+
 
                 // Crée objet météo 
                 Meteo meteo = new Meteo();
@@ -53,6 +36,36 @@ class Program
                 // Début boucle principale (1 tour = 14j), durée selon années choisies
                 DateOnly dateFin = temp.DateDebut.AddYears(menu.DureeAnnees);
 
+                
+                // Ex d'appel a supprimer après!!!!!
+                Hachich h = new Hachich();
+                jardin.PlanterAutoGrille(2, 4, h, temp.DateActuelle); // utilise méthode qui initialise la vivace
+                jardin.ReplanterVivaces(temp.DateActuelle);
+
+
+                Opium o = new Opium();
+                jardin.PlanterDansGrille(1, 2, o);
+
+                ChampiHallucinogene c = new ChampiHallucinogene();
+                jardin.PlanterDansGrille(4, 1, c);
+
+                Coca a = new Coca();
+                jardin.PlanterDansGrille(1, 3, a);
+
+                Khat b = new Khat();
+                jardin.PlanterDansGrille(2, 0, b);
+
+                // Salvia → utilise PlanterAutoGrille (plante vivace)
+                Salvia i = new Salvia();
+                jardin.PlanterAutoGrille(3, 1, i, temp.DateActuelle);
+                Salvia k = new Salvia();
+                jardin.PlanterAutoGrille(3, 2, k, temp.DateActuelle);
+                Salvia l = new Salvia();
+                jardin.PlanterAutoGrille(3, 3, l, temp.DateActuelle);
+                Salvia s = new Salvia();
+                jardin.PlanterAutoGrille(3, 4, s, temp.DateActuelle);
+                Salvia m = new Salvia();
+                jardin.PlanterAutoGrille(3, 5, m, temp.DateActuelle);
 
                 while (temp.DateActuelle < dateFin)
                 {
@@ -92,7 +105,7 @@ class Program
                                         if (plante != null)
                                         {
                                                 string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
 
                                                 if (!plante.EstVivante && plante.ToursDepuisMort == 0)
                                                         plante.ToursDepuisMort = 1;
@@ -119,7 +132,7 @@ class Program
                                 if (plante != null)
                                 {
                                         string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, typeTerrain);
+                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
 
                                         if (!plante.EstVivante && plante.ToursDepuisMort == 0)
                                                 plante.ToursDepuisMort = 1;
@@ -135,6 +148,7 @@ class Program
 
                 // Passe au tour suivant (avance date de 14 jours)
                 temp.AvancerTemps();
+
         }
     }
 

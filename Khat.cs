@@ -18,7 +18,7 @@ public class Khat : Plantes
         Emoji = "";
     }
 
-    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain)
+    public override void Pousser(float eau, float lumiere, float temperature, string typeTerrain, DateOnly dateActuelle)
     {
         if (!EstVivante) return;
 
@@ -30,7 +30,7 @@ public class Khat : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * EtatSante;
 
         if ((EtatSante < 0.4f) || (age > EsperanceDeVie))
         {
