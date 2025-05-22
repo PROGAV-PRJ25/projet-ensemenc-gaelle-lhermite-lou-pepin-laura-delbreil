@@ -81,9 +81,9 @@ public class Indesirables
     {
         Plantes? plante = jardin.GetPlante(IndesirableActuel.LigneTerrain, IndesirableActuel.ColonneActuelle); //Récupération de la plante présente sur la case de l'indésirable
 
-        if (plante != null && EstVivante == true) //si elle est en vie et que la case n'est pas vide, on tue cette plante
+        if (plante != null && plante.EstVivante == true) //si elle est en vie et que la case n'est pas vide, on tue cette plante
         {
-            EstVivante = false;
+            plante.EstVivante = false;
         }
         if (IndesirableActuel.ColonneActuelle == 5)
         {
