@@ -19,8 +19,18 @@ class Program
                 Menu menu = new Menu();
                 menu.Demarrer();
 
+                Dictionary<string, int> graines = new Dictionary<string, int>
+                {
+                        { "Hachich", 5 },
+                        { "Coca", 5 },
+                        { "Opium", 5 },
+                        { "Salvia", 5 },
+                        { "Khat", 5 },
+                        { "Champi hallucinogène", 5 }
+                };
+
                 // Juste après la création du jardin :
-                Jardin jardin = new Jardin(menu);
+                Jardin jardin = new Jardin(menu, graines);
 
                 // Affiche état actuel du jardin 
                 jardin.Afficher(menu);
@@ -28,10 +38,16 @@ class Program
                 // Crée temporalité à partir d'une date fixe 
                 Temporalite temp = new Temporalite(DateOnly.Parse("2025-05-22"));
 
-
-
                 // Crée objet météo 
                 Meteo meteo = new Meteo();
+
+                // GÉNÉRER MÉTÉO DÈS LE DÉBUT
+                meteo.GenererEvenement(temp.SaisonActuelle, temp);
+                meteo.ModifierValeursSaison(temp.SaisonActuelle);
+                jardin.AppliquerEffetsMeteo(meteo);
+
+                // Affiche dès le départ avec les bonnes valeurs
+                jardin.AffichageInteractif(temp, meteo);
 
                 //Créer liste indésirables
                 Indesirables indesirable = new Indesirables("", "", "", "", 0, menu);
@@ -39,10 +55,6 @@ class Program
 
                 // Début boucle principale (1 tour = 14j), durée selon années choisies
                 DateOnly dateFin = temp.DateDebut.AddYears(menu.DureeAnnees);
-
-                // >>> AJOUT POUR TESTER AFFICHAGE INTERACTIF <<<
-                // Tu peux mettre ça TEMPORAIREMENT si tu veux tester :
-                jardin.AffichageInteractif(temp, meteo);
 
 
                 while (temp.DateActuelle < dateFin)
@@ -97,6 +109,8 @@ class Program
                         Console.ReadLine();
 
                         temp.AvancerTemps(); // Avance de 1 ou 14 jours selon mode
+                        jardin.EvaporationGenerale(); // Moins 1L d'eau par parcelle par semaine
+
                 }
 
 
@@ -122,5 +136,7 @@ class Program
                 temp.AvancerTemps();
 
         }
-    }
+}
+
+
 

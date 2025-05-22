@@ -20,7 +20,7 @@ public class Saisons
     private double tauxSoleilInitial;
 
     // init tous les paramètres climatiques de la saison
-    public Saisons(string nom, double temperature, double tauxPrecipitation, double tauxSoleil,
+    public Saisons(string nom, double tauxSoleil, double temperature, double tauxPrecipitation,
                    double probaGel, double probaPluieTorrentielle, double probaCanicule, double probaSecheresse)
     {
         Nom = nom;

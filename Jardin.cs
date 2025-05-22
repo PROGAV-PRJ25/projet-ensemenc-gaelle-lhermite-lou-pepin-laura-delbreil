@@ -9,13 +9,16 @@ public class Jardin
     private float[,] EauParcelle; // eau en litres
     private int[,] LumiereParcelle;
     public List<Indesirables> IndesirablesDansJardin { get; set; } = new List<Indesirables>();
+    private Dictionary<string, int> graines;
+
 
 
 
     // crée tableau terrains + init grille plantation
-    public Jardin(Menu menu)
+    public Jardin(Menu menu, Dictionary<string, int> grainesInitiales)
     {
         int nombreDeTerrains = menu.NbTerrains; // Nombre de terrains (2, 4, ou 6 terrains)
+        this.graines = grainesInitiales;
 
         Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker terrains
         Grille = new Plantes?[nombreDeTerrains, 6]; // Grille pour stocker plantes par terrain + colonne
@@ -143,10 +146,10 @@ public class Jardin
         Console.WriteLine("\n--- INDESIRABLES DANS LE JARDIN ---");
         foreach (var ind in IndesirablesDansJardin)
         {
-        if (ind.EstPresent)
-        {
-            Console.WriteLine($"🔸 {ind.Nom} {ind.Icone} sur le terrain {ind.LigneTerrain}, colonne {ind.ColonneActuelle}");
-        }
+            if (ind.EstPresent)
+            {
+                Console.WriteLine($"🔸 {ind.Nom} {ind.Icone} sur le terrain {ind.LigneTerrain}, colonne {ind.ColonneActuelle}");
+            }
         }
 
     }
@@ -163,7 +166,19 @@ public class Jardin
 
             Console.WriteLine($"📅 Date : {temp.DateActuelle}");
             Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
-            Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"}\n");
+            string effetMeteo = meteo.EvenementMeteo switch
+            {
+                "Pluie torrentielle" => "+2L sur toutes les parcelles",
+                "Pluie" => "+1L sur toutes les parcelles",
+                "Gel" => "-0.2L sur toutes les parcelles, Temp = 0°C",
+                "Sécheresse" => "-0.3L, +3°C",
+                "Canicule" => "-0.7L, +5°C",
+                "Temps normal" or null => "aucun effet",
+                _ => "effet inconnu"
+            };
+
+            Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
+
             Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
 
             string reset = "\x1b[0m";
@@ -175,7 +190,7 @@ public class Jardin
                     var plante = GetPlante(i, j);
                     string emoji = plante?.Afficher() ?? "   ";
 
-                    string icone; 
+                    string icone;
                     var indesirable = Indesirables.IndesirableActuel;
                     if (indesirable != null && indesirable.EstPresent && indesirable.LigneTerrain == i && indesirable.ColonneActuelle == j)
                     {
@@ -192,9 +207,9 @@ public class Jardin
                     }
                     else
                     {
-                        Console.Write(Terrains[i].Couleur + emoji + icone + " " +reset + "  ");
+                        Console.Write(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
                     }
-                    
+
 
                 }
 
@@ -202,7 +217,7 @@ public class Jardin
                 Console.WriteLine();  // saut de ligne entre terrains
             }
 
-            AfficherInfosParcelle(terrainIndex, colonne);
+            AfficherInfosParcelle(terrainIndex, colonne, temp);
 
             ConsoleKey key = Console.ReadKey(true).Key;
 
@@ -226,6 +241,9 @@ public class Jardin
                 case ConsoleKey.A:
                     GererActionParcelle(terrainIndex, colonne, "arroser", temp, meteo);
                     break;
+                case ConsoleKey.R:
+                    GererActionParcelle(terrainIndex, colonne, "cueillir", temp, meteo);
+                    break;
                 case ConsoleKey.Enter:
                     continuer = false;
                     break;
@@ -233,7 +251,7 @@ public class Jardin
         }
     }
 
-    private void AfficherInfosParcelle(int terrainIndex, int colonne)
+    private void AfficherInfosParcelle(int terrainIndex, int colonne, Temporalite temp)
     {
         var terrain = Terrains[terrainIndex];
         var plante = GetPlante(terrainIndex, colonne);
@@ -245,7 +263,7 @@ public class Jardin
         Console.WriteLine("\n -----------------------------\n");
         Console.WriteLine($"   Type de sol : {terrain.TypeDeSol}");
         Console.WriteLine($"   Eau : {eau}L ");
-        Console.WriteLine($"   Lumière : {tauxLumiere}%");
+        Console.WriteLine($"   Lumière : {temp.SaisonActuelle.TauxSoleil} h/jour");
         Console.WriteLine(" \n-----------------------------\n");
 
         if (plante == null)
@@ -285,7 +303,10 @@ public class Jardin
                     Console.WriteLine("\n🌱 Sélectionnez une plante à semer :\n");
                     for (int i = 0; i < plantesDispo.Length; i++)
                     {
-                        Console.WriteLine(i == indexSelection ? $"> {plantesDispo[i]}" : $"  {plantesDispo[i]}");
+                        string nom = plantesDispo[i];
+                        int stock = graines.ContainsKey(nom) ? graines[nom] : 0;
+                        string ligne = $"{nom} ({stock} graines)";
+                        Console.WriteLine(i == indexSelection ? $"> {ligne}" : $"  {ligne}");
                     }
 
                     Console.WriteLine("\n⬆️ / ⬇️ pour naviguer, Entrée pour valider, Échap pour annuler");
@@ -297,12 +318,19 @@ public class Jardin
                         indexSelection = (indexSelection + 1) % plantesDispo.Length;
                     else if (key == ConsoleKey.Enter)
                     {
+                        string planteNom = plantesDispo[indexSelection];
+                        if (!graines.ContainsKey(planteNom) || graines[planteNom] <= 0)
+                        {
+                            Console.WriteLine($"\n❌ Plus de graines disponibles pour {planteNom} !");
+                            Thread.Sleep(1000);
+                            continue;
+                        }
+
                         Console.Clear();
                         AffichageGrilleAvecInfos(terrainIndex, colonne, temp, meteo);
+                        Console.WriteLine($"\n🌿 Plante sélectionnée : {planteNom}\n");
 
-                        Console.WriteLine($"\n🌿 Plante sélectionnée : {plantesDispo[indexSelection]}\n");
-
-                        Plantes? planteChoisie = plantesDispo[indexSelection] switch
+                        Plantes? planteChoisie = planteNom switch
                         {
                             "Hachich" => new Hachich(),
                             "Coca" => new Coca(),
@@ -320,19 +348,20 @@ public class Jardin
                             Console.WriteLine($"Besoin lumière : {planteChoisie.BesoinLumiere} h/jour");
                             Console.WriteLine($"Temp. idéale : {planteChoisie.TempPreferee} °C");
                             Console.WriteLine($"Espérance de vie : {planteChoisie.EsperanceDeVie} sem.");
-                            Console.WriteLine("\n Entrée pour semer | Échap pour revenir");
+                            Console.WriteLine("\nEntrée pour semer | Échap pour revenir");
 
                             var key2 = Console.ReadKey(true).Key;
                             if (key2 == ConsoleKey.Enter)
                             {
                                 PlanterDansGrille(terrainIndex, colonne, planteChoisie);
+                                graines[planteNom]--;
                                 Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée !");
                                 Thread.Sleep(1000);
                                 enSelection = false;
                             }
                             else if (key2 == ConsoleKey.Escape)
                             {
-                                // retourne à la sélection
+                                // retour au menu de sélection
                             }
                         }
                     }
@@ -342,7 +371,6 @@ public class Jardin
                     }
                 }
             }
-
             else
             {
                 Console.WriteLine("\n❌ Une plante est déjà présente !");
@@ -353,7 +381,7 @@ public class Jardin
         {
             if (plante != null)
             {
-                EauParcelle[terrainIndex, colonne] += 1.0f; // 1L d’eau
+                EauParcelle[terrainIndex, colonne] += 1.0f;
                 Console.WriteLine("\n💧 Vous avez arrosé la plante ! (+1L)");
             }
             else
@@ -363,14 +391,48 @@ public class Jardin
 
             Thread.Sleep(1000);
         }
+        else if (action == "cueillir")
+        {
+            if (plante != null && plante.CroissanceActuelle > 75 && plante.EstVivante)
+            {
+                Console.WriteLine($"\n🌾 Vous avez récolté {plante.Nom} !");
+                if (graines.ContainsKey(plante.Nom))
+                    graines[plante.Nom] += plante.Fruits;
+                else
+                    graines[plante.Nom] = plante.Fruits;
+
+                Grille[terrainIndex, colonne] = null;
+                Thread.Sleep(1000);
+            }
+            else
+            {
+                Console.WriteLine("\n❌ La plante n'est pas prête à être récoltée !");
+                Thread.Sleep(1000);
+            }
+        }
     }
+
 
 
     private void AffichageGrilleAvecInfos(int terrainIndex, int colonne, Temporalite temp, Meteo meteo)
     {
         Console.WriteLine($"📅 Date : {temp.DateActuelle}");
         Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
-        Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"}\n");
+        string effetMeteo = meteo.EvenementMeteo switch
+        {
+            "Pluie torrentielle" => "+2L sur toutes les parcelles",
+            "Pluie" => "+1L sur toutes les parcelles",
+            "Gel" => "-0.2L + Temp = 0°C",
+            "Sécheresse" => "-0.3L, +3°C",
+            "Canicule" => "-0.7L, +5°C",
+            "Orage" => "-0.2L",
+            "Brouillard" => "-30% lumière",
+            "Temps normal" or null => "aucun effet",
+            _ => "effet inconnu"
+        };
+
+        Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
+
         Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
 
         string reset = "\x1b[0m";
@@ -383,7 +445,7 @@ public class Jardin
                 string emoji = plante?.Afficher() ?? "   ";
                 bool estSelectionnee = (i == terrainIndex && j == colonne);
 
-                string icone; 
+                string icone;
                 var indesirable = Indesirables.IndesirableActuel;
                 if (indesirable != null && indesirable.EstPresent && indesirable.LigneTerrain == i && indesirable.ColonneActuelle == j)
                 {
@@ -399,7 +461,7 @@ public class Jardin
                 }
                 else
                 {
-                    Console.Write(Terrains[i].Couleur + emoji + icone  + " " +reset + "  ");
+                    Console.Write(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
                 }
             }
 
@@ -407,7 +469,7 @@ public class Jardin
             Console.WriteLine();  // saut de ligne entre terrains
         }
 
-        AfficherInfosParcelle(terrainIndex, colonne);
+        AfficherInfosParcelle(terrainIndex, colonne, temp);
     }
 
     public void AppliquerLumiere(Saisons saison, Meteo meteo)
@@ -457,6 +519,20 @@ public class Jardin
     {
         return LumiereParcelle[terrainIndex, colonne];
     }
+    
+    public void EvaporationGenerale()
+    {
+        for (int i = 0; i < Terrains.Length; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                EauParcelle[i, j] -= 1.0f;
+                if (EauParcelle[i, j] < 0)
+                    EauParcelle[i, j] = 0;
+            }
+        }
+    }
+
     
     
 
