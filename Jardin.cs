@@ -5,14 +5,35 @@
 public class Jardin
 {
     public Terrain[] Terrains { get; private set; }
-    private Plantes?[,] Grille;  // Tableau pour gérer la grille du jardin (6 colonnes)
+    private Plantes?[,] Grille;// Tableau pour gérer la grille du jardin (6 colonnes)
+    private float[,] EauParcelle; // eau en litres
+    private int[,] LumiereParcelle;
+
 
     // crée tableau terrains + init grille plantation
     public Jardin(Menu menu)
     {
         int nombreDeTerrains = menu.NbTerrains; // Nombre de terrains (2, 4, ou 6 terrains)
+
         Terrains = new Terrain[nombreDeTerrains];  // Tableau pour stocker terrains
         Grille = new Plantes?[nombreDeTerrains, 6]; // Grille pour stocker plantes par terrain + colonne
+
+        EauParcelle = new float[nombreDeTerrains, 6];
+        for (int i = 0; i < nombreDeTerrains; i++)
+            for (int j = 0; j < 6; j++)
+                EauParcelle[i, j] = 1.0f; // 1L par défaut
+
+        LumiereParcelle = new int[nombreDeTerrains, 6];
+
+        for (int i = 0; i < nombreDeTerrains; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                EauParcelle[i, j] = 1.0f;     // 1 litre d'eau par défaut
+                LumiereParcelle[i, j] = 60;   // 60% de lumière par défaut
+            }
+        }
+
 
         Random rand = new Random();
 
@@ -128,7 +149,6 @@ public void ReplanterVivaces(DateOnly dateActuelle)
         {
             Console.Clear();
 
-            // Informations générales
             Console.WriteLine($"📅 Date : {temp.DateActuelle}");
             Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
             Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"}\n");
@@ -136,7 +156,6 @@ public void ReplanterVivaces(DateOnly dateActuelle)
 
             string reset = "\x1b[0m";
 
-            // Affichage des terrains un par un (comme dans ton code original)
             for (int i = 0; i < Terrains.Length; i++)
             {
                 for (int j = 0; j < 6; j++)
@@ -146,23 +165,17 @@ public void ReplanterVivaces(DateOnly dateActuelle)
                     bool estSelectionnee = (i == terrainIndex && j == colonne);
 
                     if (estSelectionnee)
-                    {
-                        Console.Write("\x1b[40m" + emoji + reset + "  "); // fond noir
-                    }
+                        Console.Write("\x1b[40m" + emoji + reset + "  ");
                     else
-                    {
                         Console.Write(Terrains[i].Couleur + emoji + reset + "  ");
-                    }
                 }
 
                 Console.WriteLine();
-                Console.WriteLine();  // retour à la ligne entre chaque terrain
+                Console.WriteLine();  // saut de ligne entre terrains
             }
 
-            // Affichage des infos de la parcelle sélectionnée
             AfficherInfosParcelle(terrainIndex, colonne);
 
-            // Lecture de la touche
             ConsoleKey key = Console.ReadKey(true).Key;
 
             switch (key)
@@ -180,45 +193,48 @@ public void ReplanterVivaces(DateOnly dateActuelle)
                     terrainIndex = (terrainIndex + 1) % Terrains.Length;
                     break;
                 case ConsoleKey.P:
-                    GererActionParcelle(terrainIndex, colonne, "planter");
+                    GererActionParcelle(terrainIndex, colonne, "planter", temp, meteo);
                     break;
                 case ConsoleKey.A:
-                    GererActionParcelle(terrainIndex, colonne, "arroser");
+                    GererActionParcelle(terrainIndex, colonne, "arroser", temp, meteo);
                     break;
                 case ConsoleKey.Enter:
-                    continuer = false; // passe au tour suivant
+                    continuer = false;
                     break;
             }
         }
     }
-
-
 
     private void AfficherInfosParcelle(int terrainIndex, int colonne)
     {
         var terrain = Terrains[terrainIndex];
         var plante = GetPlante(terrainIndex, colonne);
 
-        Console.WriteLine("\n📍 Informations sur la parcelle sélectionnée :");
-        Console.WriteLine($"🔷 Terrain : {terrain.Nom} ({terrain.TypeDeSol})");
-        Console.WriteLine($"💧 Eau : {(terrain.PourvuEnEau == true ? "Oui" : "Non")} | ☀️ Lumière : {(terrain.ALaLumiere == true ? "Oui" : "Non")}");
+        float eau = EauParcelle[terrainIndex, colonne];
+        int tauxLumiere = LumiereParcelle[terrainIndex, colonne];
+
+        Console.WriteLine($"   {Terrains[terrainIndex].Nom}  ");
+        Console.WriteLine("\n -----------------------------\n");
+        Console.WriteLine($"   Type de sol : {terrain.TypeDeSol}");
+        Console.WriteLine($"   Eau : {eau}L ");
+        Console.WriteLine($"   Lumière : {tauxLumiere}%");
+        Console.WriteLine(" \n-----------------------------\n");
 
         if (plante == null)
         {
             Console.WriteLine("🌱 Aucune plante présente.");
-            Console.WriteLine("✅ Appuyez sur Entrée pour planter ici.");
         }
         else
         {
-            Console.WriteLine($"🌿 Plante : {plante.Nom}");
-            Console.WriteLine($"📈 Croissance : {plante.CroissanceActuelle} cm");
-            Console.WriteLine($"❤️ Santé : {(int)(plante.EtatSante * 100)}%");
-            Console.WriteLine($"🧬 Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
-            Console.WriteLine("💦 Appuyez sur Entrée pour arroser (simulation).");
+            Console.WriteLine($"Semis : {plante.Nom}");
+            Console.WriteLine($"Croissance : {plante.CroissanceActuelle} cm");
+            Console.WriteLine($"Santé : {(int)(plante.EtatSante * 100)}%");
+            Console.WriteLine($"Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
         }
     }
 
-    private void GererActionParcelle(int terrainIndex, int colonne, string action)
+
+    private void GererActionParcelle(int terrainIndex, int colonne, string action, Temporalite temp, Meteo meteo)
     {
         var plante = GetPlante(terrainIndex, colonne);
 
@@ -226,31 +242,168 @@ public void ReplanterVivaces(DateOnly dateActuelle)
         {
             if (plante == null)
             {
-                Console.WriteLine("\n🌱 Plantation en cours...");
-                PlanterDansGrille(terrainIndex, colonne, new Hachich());
+                int indexSelection = 0;
+                string[] plantesDispo = { "Hachich" };
+
+                bool enSelection = true;
+                while (enSelection)
+                {
+                    Console.Clear();
+                    AffichageGrilleAvecInfos(terrainIndex, colonne, temp, meteo);
+
+                    Console.WriteLine("\n🌱 Sélectionnez une plante à semer :\n");
+                    for (int i = 0; i < plantesDispo.Length; i++)
+                    {
+                        Console.WriteLine(i == indexSelection ? $"> {plantesDispo[i]}" : $"  {plantesDispo[i]}");
+                    }
+
+                    Console.WriteLine("\n⬆️ / ⬇️ pour naviguer, Entrée pour valider, Échap pour annuler");
+
+                    var key = Console.ReadKey(true).Key;
+                    if (key == ConsoleKey.UpArrow)
+                        indexSelection = (indexSelection - 1 + plantesDispo.Length) % plantesDispo.Length;
+                    else if (key == ConsoleKey.DownArrow)
+                        indexSelection = (indexSelection + 1) % plantesDispo.Length;
+                    else if (key == ConsoleKey.Enter)
+                    {
+                        Console.Clear();
+                        AffichageGrilleAvecInfos(terrainIndex, colonne, temp, meteo);
+
+                        Console.WriteLine($"\n🌿 Plante sélectionnée : {plantesDispo[indexSelection]}\n");
+
+                        if (plantesDispo[indexSelection] == "Hachich")
+                        {
+                            var planteChoisie = new Hachich();
+                            Console.WriteLine($"Besoin d’eau : {planteChoisie.BesoinEau} L/semaine");
+                            Console.WriteLine($"Besoin lumière : {planteChoisie.BesoinLumiere} h/jour");
+                            Console.WriteLine($"Temp. idéale : {planteChoisie.TempPreferee} °C");
+                            Console.WriteLine($"Espérance de vie : {planteChoisie.EsperanceDeVie} sem.");
+                            Console.WriteLine("\n✅ Entrée pour semer | Échap pour revenir");
+
+                            var key2 = Console.ReadKey(true).Key;
+                            if (key2 == ConsoleKey.Enter)
+                            {
+                                PlanterDansGrille(terrainIndex, colonne, planteChoisie);
+                                Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée !");
+                                Thread.Sleep(1000);
+                                enSelection = false;
+                            }
+                            else if (key2 == ConsoleKey.Escape)
+                            {
+                                // retourne à la sélection
+                            }
+                        }
+                    }
+                    else if (key == ConsoleKey.Escape)
+                    {
+                        enSelection = false;
+                    }
+                }
             }
+
             else
             {
                 Console.WriteLine("\n❌ Une plante est déjà présente !");
+                Thread.Sleep(1000);
             }
         }
         else if (action == "arroser")
         {
             if (plante != null)
             {
-                Console.WriteLine("\n💦 Vous avez arrosé la plante ! (effet à coder si besoin)");
-                // Tu peux ajouter ici un effet si tu veux (ex: +santé)
+                EauParcelle[terrainIndex, colonne] += 1.0f; // 1L d’eau
+                Console.WriteLine("\n💧 Vous avez arrosé la plante ! (+1L)");
             }
             else
             {
                 Console.WriteLine("\n❌ Pas de plante à arroser !");
             }
-        }
 
-        Thread.Sleep(1000); // petite pause
+            Thread.Sleep(1000);
+        }
     }
 
 
+    private void AffichageGrilleAvecInfos(int terrainIndex, int colonne, Temporalite temp, Meteo meteo)
+    {
+        Console.WriteLine($"📅 Date : {temp.DateActuelle}");
+        Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
+        Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"}\n");
+        Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
 
+        string reset = "\x1b[0m";
+
+        for (int i = 0; i < Terrains.Length; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                var plante = GetPlante(i, j);
+                string emoji = plante?.Afficher() ?? "   ";
+                bool estSelectionnee = (i == terrainIndex && j == colonne);
+
+                if (estSelectionnee)
+                {
+                    Console.Write("\x1b[40m" + emoji + reset + "  ");
+                }
+                else
+                {
+                    Console.Write(Terrains[i].Couleur + emoji + reset + "  ");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();  // saut de ligne entre terrains
+        }
+
+        AfficherInfosParcelle(terrainIndex, colonne);
+    }
+
+    public void AppliquerLumiere(Saisons saison, Meteo meteo)
+    {
+        int baseLumiere = (int)saison.TauxSoleil;
+
+        if (meteo.EvenementMeteo == "Canicule") baseLumiere += 20;
+        if (meteo.EvenementMeteo == "Brouillard") baseLumiere -= 30;
+        if (meteo.EvenementMeteo == "Orage") baseLumiere -= 20;
+
+        baseLumiere = Math.Clamp(baseLumiere, 0, 100);
+
+        for (int i = 0; i < Terrains.Length; i++)
+            for (int j = 0; j < 6; j++)
+                LumiereParcelle[i, j] = baseLumiere;
+    }
+
+    public void AppliquerEffetsMeteo(Meteo meteo)
+    {
+        for (int i = 0; i < Terrains.Length; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                // Évaporation naturelle
+                EauParcelle[i, j] -= 0.3f;
+
+                // Effets météo
+                if (meteo.EvenementMeteo == "Canicule") EauParcelle[i, j] -= 0.7f;
+                if (meteo.EvenementMeteo == "Gel") EauParcelle[i, j] -= 0.2f;
+                if (meteo.EvenementMeteo == "Pluie") EauParcelle[i, j] += 1.0f;
+                if (meteo.EvenementMeteo == "Pluie torrentielle") EauParcelle[i, j] += 2.0f;
+
+                // Bornes de sécurité
+                if (EauParcelle[i, j] < 0) EauParcelle[i, j] = 0;
+                if (EauParcelle[i, j] > 10) EauParcelle[i, j] = 10;
+            }
+        }
+    }
+
+
+    public float GetEau(int terrainIndex, int colonne)
+    {
+        return EauParcelle[terrainIndex, colonne];
+    }
+
+    public int GetLumiere(int terrainIndex, int colonne)
+    {
+        return LumiereParcelle[terrainIndex, colonne];
+    }
 
 }
