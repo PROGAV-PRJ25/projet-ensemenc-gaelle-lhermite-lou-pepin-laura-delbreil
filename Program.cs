@@ -33,6 +33,10 @@ class Program
                 // Crée objet météo 
                 Meteo meteo = new Meteo();
 
+                //Créer liste indésirables
+                Indesirables indesirable = new Indesirables("", "", "", "", 0, menu);
+                List<Indesirables> listeIndesirables = indesirable.GenererIndesirables(menu);
+
                 // Début boucle principale (1 tour = 14j), durée selon années choisies
                 DateOnly dateFin = temp.DateDebut.AddYears(menu.DureeAnnees);
 

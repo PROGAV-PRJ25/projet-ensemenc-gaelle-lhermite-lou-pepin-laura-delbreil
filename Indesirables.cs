@@ -38,7 +38,7 @@ public class Indesirables
     //Fct pour générer la liste complète d'indésirables
     public List<Indesirables> GenererIndesirables(Menu menu)
     {
-        ListeIndesirables.Add(new Indesirables("Policier", "👮", "PistoletEau", "🔫", 0.1, menu));
+        ListeIndesirables.Add(new Indesirables("Policier", "👮", "PistoletEau", "🔫", 1, menu));
         ListeIndesirables.Add(new Indesirables("Chien renifleur", "🐶", "Steak", "🥩", 0.09, menu));
         ListeIndesirables.Add(new Indesirables("Voleur adverse", "🕵️ ", "Cameras", "📸", 0.08, menu));
         ListeIndesirables.Add(new Indesirables("Rats", "🐀", "Fromage", "🧀", 0.07, menu));

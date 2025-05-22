@@ -38,14 +38,24 @@ public abstract class Terrain
         {
             var plante = grilleJardin[terrainIndex, col];
 
-            if (plante != null)
+            string icone;
+            var indesirable = Indesirables.IndesirableActuel; 
+            if (indesirable != null && indesirable.EstPresent && indesirable.LigneTerrain == terrainIndex && indesirable.ColonneActuelle == col)
             {
-                string emoji = plante.Afficher();
-                Console.Write($"{Couleur}{emoji}{reset}  "); //espaces pour ajuster 
+                icone = indesirable.Icone;
             }
             else
             {
-                Console.Write($"{Couleur}   {reset}  "); //idem
+                icone = "  ";
+            }
+            if (plante != null)
+            {
+                string emoji = plante.Afficher();
+                Console.Write($"{Couleur}{emoji}{icone} {reset}  "); //espaces pour ajuster 
+            }
+            else
+            {
+                Console.Write($"{Couleur}   {icone} {reset}  "); //idem
             }
         }
         Console.WriteLine();
