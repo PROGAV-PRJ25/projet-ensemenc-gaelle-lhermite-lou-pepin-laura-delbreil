@@ -3,8 +3,7 @@
 /// Classe pour gérer l'inventaire (acheter, sélectionner ou utiliser un objet)
 /// 
 /// 
-/// A faire potentiellement : Solution.cs avec les objets achetables
-public class Inventaire
+/*public class Inventaire
 {
     public string ObjetSelectionne{get; set;} //Objet sélectionné par l'utilisateur
     public List<Solutions> ObjetsPossedes { get; set;}
@@ -42,3 +41,4 @@ public class Inventaire
     }
     
 }
+*/

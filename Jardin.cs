@@ -273,7 +273,7 @@ public class Jardin
         Console.WriteLine($"   Lumière : {temp.SaisonActuelle.TauxSoleil} h/jour");
         Console.WriteLine("\n-----------------------------\n");
 
-        if (plante == null)
+        if (plante == null||plante.EstVivante == false)
         {
             Console.WriteLine("🌱 Aucune plante présente.");
         }
@@ -295,7 +295,7 @@ public class Jardin
 
         if (action == "planter") // Permet au joueur de planter une graine d'une des plantes proposées après avoir affiché les préférences de la plante 
         {
-            if (plante == null)
+            if (plante == null||plante.EstVivante==false)
             {
                 int indexSelection = 0;
                 string[] plantesDispo = { "Hachich", "Coca", "Opium", "Salvia", "Khat", "Champi hallucinogène" };

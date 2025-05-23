@@ -121,9 +121,11 @@ public class Indesirables
     EstPresent = false;
 }
 
+/*
     //Fct pour faire partir l'indésirable en utilisant un objet
-    public void FairePartir(Inventaire inventaire){
-        inventaire.SelectionnerObjet(inventaire.ObjetSelectionne); 
+    public void FairePartir(Inventaire inventaire)
+    {
+        inventaire.SelectionnerObjet(inventaire.ObjetSelectionne);
         if (inventaire.ObjetSelectionne == Solution)
         { //si l'objet sélectionné est la solution pour se débarasser de cet indésirable, alors on l'utilise sur lui et on fait disparaitre l'indésirable
             inventaire.UtiliserObjet(inventaire.ObjetSelectionne); //Appel d'une méthode pour utiliser l'objet présente dans inventaire
@@ -135,7 +137,7 @@ public class Indesirables
             Console.WriteLine("Raté... cet objet ne vous sera d'aucune utilité...");
         }
     }
-    
+  */  
     public override string ToString()
     {
         return $"Nom : {Nom}, {Icone}, Solution pour l'enlever : {Solution}, Terrain n° {LigneTerrain} et Parcelle n° {ColonneActuelle + 1}";
