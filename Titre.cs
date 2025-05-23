@@ -119,7 +119,7 @@ public class JeuEnsemence
     }
 
     // Affiche ascii art centré représentant ENSEMENCE
-    private void AfficherTitre()
+    public static void AfficherTitre()
     {
         string[] titre =
         {
@@ -142,7 +142,7 @@ public class JeuEnsemence
     }
 
     // Centre un texte en console selon largeur actuelle
-    private void CentrerTexte(string texte)
+    public static void CentrerTexte(string texte)
     {
         int largeurConsole = Console.WindowWidth;
         int longueurTexte = texte.Length;

@@ -10,6 +10,8 @@ public class Jardin
     private int[,] LumiereParcelle;
     public List<Indesirables> IndesirablesDansJardin { get; set; } = new List<Indesirables>();
     private Dictionary<string, int> graines;
+    private JeuEnsemence jeuTitre = new JeuEnsemence();
+
 
 
 
@@ -74,20 +76,20 @@ public class Jardin
     {
         if (terrainIndex < 0 || terrainIndex >= Terrains.Length)
         {
-            Console.WriteLine("Erreur : index de terrain hors limites.");
+            JeuEnsemence.CentrerTexte("Erreur : index de terrain hors limites.");
             return;
         }
         if (colonne < 0 || colonne >= 6)
         {
-            Console.WriteLine("Erreur : colonne hors limites.");
+            JeuEnsemence.CentrerTexte("Erreur : colonne hors limites.");
             return;
         }
 
         // Placer la plante dans la case correspondante
         Grille[terrainIndex, colonne] = plante;
-        Console.Write(Grille[terrainIndex, colonne]?.Emoji ?? " ");
+        JeuEnsemence.CentrerTexte(Grille[terrainIndex, colonne]?.Emoji ?? " ");
 
-        Console.WriteLine($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne + 1}.");
+        JeuEnsemence.CentrerTexte($"{plante.Nom} plantée dans le terrain {Terrains[terrainIndex].Nom} à la colonne {colonne + 1}.");
     }
 
     public void PlanterAutoGrille(int terrainIndex, int colonne, Plantes plante, DateOnly dateActuelle)
@@ -109,7 +111,7 @@ public class Jardin
                 var plante = GetPlante(ligne, col);
                 if (plante is PlanteVivace vivace && vivace.PretAPousser(dateActuelle))
                 {
-                    Console.WriteLine($"🌿 {plante.Nom} repousse automatiquement à [{ligne},{col}] !");
+                    JeuEnsemence.CentrerTexte($"🌿 {plante.Nom} repousse automatiquement à [{ligne},{col}] !");
                     vivace.EstVivante = true;
                     vivace.EtatSante = 0.5f;
                     vivace.CroissanceActuelle = 0;
@@ -143,12 +145,12 @@ public class Jardin
             }
         }
 
-        Console.WriteLine("\n--- INDESIRABLES DANS LE JARDIN ---");
+        JeuEnsemence.CentrerTexte("\n--- INDESIRABLES DANS LE JARDIN ---");
         foreach (var ind in IndesirablesDansJardin)
         {
             if (ind.EstPresent)
             {
-                Console.WriteLine($"🔸 {ind.Nom} {ind.Icone} sur le terrain {ind.LigneTerrain}, colonne {ind.ColonneActuelle}");
+                JeuEnsemence.CentrerTexte($"🔸 {ind.Nom} {ind.Icone} sur le terrain {ind.LigneTerrain}, colonne {ind.ColonneActuelle}");
             }
         }
 
@@ -162,10 +164,16 @@ public class Jardin
 
         while (continuer)
         {
+            
             Console.Clear();
+            JeuEnsemence.AfficherTitre();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
 
-            Console.WriteLine($"📅 Date : {temp.DateActuelle}");
-            Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
+            JeuEnsemence.CentrerTexte($"📅 Date : {temp.DateActuelle}");
+            JeuEnsemence.CentrerTexte($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
             string effetMeteo = meteo.EvenementMeteo switch
             {
                 "Pluie torrentielle" => "+2L sur toutes les parcelles",
@@ -177,9 +185,9 @@ public class Jardin
                 _ => "effet inconnu"
             };
 
-            Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
+            JeuEnsemence.CentrerTexte($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
 
-            Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
+            JeuEnsemence.CentrerTexte("🎮 Flèches = naviguer | P = planter | A = arroser | R = récolter | Entrée = tour suivant\n");
 
             string reset = "\x1b[0m";
 
@@ -203,11 +211,11 @@ public class Jardin
                     bool estSelectionnee = (i == terrainIndex && j == colonne);
                     if (estSelectionnee)
                     {
-                        Console.Write("\x1b[40m" + emoji + icone + " " + reset + "  ");
+                        JeuEnsemence.CentrerTexte("\x1b[40m" + emoji + icone + " " + reset + "  ");
                     }
                     else
                     {
-                        Console.Write(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
+                        JeuEnsemence.CentrerTexte(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
                     }
 
 
@@ -259,26 +267,26 @@ public class Jardin
         float eau = EauParcelle[terrainIndex, colonne];
         int tauxLumiere = LumiereParcelle[terrainIndex, colonne];
 
-        Console.WriteLine($"   {Terrains[terrainIndex].Nom}  ");
-        Console.WriteLine("\n -----------------------------\n");
-        Console.WriteLine($"   Type de sol : {terrain.TypeDeSol}");
-        Console.WriteLine($"   Eau : {eau}L ");
-        Console.WriteLine($"   Lumière : {temp.SaisonActuelle.TauxSoleil} h/jour");
-        Console.WriteLine(" \n-----------------------------\n");
+        JeuEnsemence.CentrerTexte($"   {Terrains[terrainIndex].Nom}  ");
+        JeuEnsemence.CentrerTexte("-----------------------------");
+        JeuEnsemence.CentrerTexte($"   Type de sol : {terrain.TypeDeSol}");
+        JeuEnsemence.CentrerTexte($"   Eau : {eau}L ");
+        JeuEnsemence.CentrerTexte($"   Lumière : {temp.SaisonActuelle.TauxSoleil} h/jour");
+        JeuEnsemence.CentrerTexte("-----------------------------");
 
         if (plante == null)
         {
-            Console.WriteLine("🌱 Aucune plante présente.");
+            JeuEnsemence.CentrerTexte("🌱 Aucune plante présente.");
         }
         else
         {
-            Console.WriteLine($"Semis : {plante.Nom}");
-            Console.WriteLine($"Croissance : {plante.CroissanceActuelle} cm");
-            Console.WriteLine($"Santé : {(int)(plante.EtatSante * 100)}%");
-            Console.WriteLine($"Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
-            Console.WriteLine($"\n📋 BESOINS de {plante.Nom} :");
-            Console.WriteLine($"Eau : {plante.BesoinEau} L/semaine");
-            Console.WriteLine($"Lumière : {plante.BesoinLumiere} h/jour");
+            JeuEnsemence.CentrerTexte($"Semis : {plante.Nom}");
+            JeuEnsemence.CentrerTexte($"Croissance : {plante.CroissanceActuelle} cm");
+            JeuEnsemence.CentrerTexte($"Santé : {(int)(plante.EtatSante * 100)}%");
+            JeuEnsemence.CentrerTexte($"Vivante : {(plante.EstVivante ? "Oui" : "Non")}");
+            JeuEnsemence.CentrerTexte($"\n📋 BESOINS de {plante.Nom} :");
+            JeuEnsemence.CentrerTexte($"Eau : {plante.BesoinEau} L/semaine");
+            JeuEnsemence.CentrerTexte($"Lumière : {plante.BesoinLumiere} h/jour");
         }
     }
 
@@ -300,16 +308,16 @@ public class Jardin
                     Console.Clear();
                     AffichageGrilleAvecInfos(terrainIndex, colonne, temp, meteo);
 
-                    Console.WriteLine("\n🌱 Sélectionnez une plante à semer :\n");
+                    JeuEnsemence.CentrerTexte("\n🌱 Sélectionnez une plante à semer :\n");
                     for (int i = 0; i < plantesDispo.Length; i++)
                     {
                         string nom = plantesDispo[i];
                         int stock = graines.ContainsKey(nom) ? graines[nom] : 0;
                         string ligne = $"{nom} ({stock} graines)";
-                        Console.WriteLine(i == indexSelection ? $"> {ligne}" : $"  {ligne}");
+                        JeuEnsemence.CentrerTexte(i == indexSelection ? $"> {ligne}" : $"  {ligne}");
                     }
 
-                    Console.WriteLine("\n⬆️ / ⬇️ pour naviguer, Entrée pour valider, Échap pour annuler");
+                    JeuEnsemence.CentrerTexte("\n Entrée pour valider, Échap pour annuler");
 
                     var key = Console.ReadKey(true).Key;
                     if (key == ConsoleKey.UpArrow)
@@ -321,14 +329,14 @@ public class Jardin
                         string planteNom = plantesDispo[indexSelection];
                         if (!graines.ContainsKey(planteNom) || graines[planteNom] <= 0)
                         {
-                            Console.WriteLine($"\n❌ Plus de graines disponibles pour {planteNom} !");
+                            JeuEnsemence.CentrerTexte($"\n Plus de graines disponibles pour {planteNom} !");
                             Thread.Sleep(1000);
                             continue;
                         }
 
                         Console.Clear();
                         AffichageGrilleAvecInfos(terrainIndex, colonne, temp, meteo);
-                        Console.WriteLine($"\n🌿 Plante sélectionnée : {planteNom}\n");
+                        JeuEnsemence.CentrerTexte($"\n Plante sélectionnée : {planteNom}\n");
 
                         Plantes? planteChoisie = planteNom switch
                         {
@@ -343,19 +351,19 @@ public class Jardin
 
                         if (planteChoisie != null)
                         {
-                            Console.WriteLine($"Terrain favorable : {planteChoisie.TerrainPrefere}");
-                            Console.WriteLine($"Besoin d’eau : {planteChoisie.BesoinEau} L/semaine");
-                            Console.WriteLine($"Besoin lumière : {planteChoisie.BesoinLumiere} h/jour");
-                            Console.WriteLine($"Temp. idéale : {planteChoisie.TempPreferee} °C");
-                            Console.WriteLine($"Espérance de vie : {planteChoisie.EsperanceDeVie} sem.");
-                            Console.WriteLine("\nEntrée pour semer | Échap pour revenir");
+                            JeuEnsemence.CentrerTexte($"Terrain favorable : {planteChoisie.TerrainPrefere}");
+                            JeuEnsemence.CentrerTexte($"Besoin d’eau : {planteChoisie.BesoinEau} L/semaine");
+                            JeuEnsemence.CentrerTexte($"Besoin lumière : {planteChoisie.BesoinLumiere} h/jour");
+                            JeuEnsemence.CentrerTexte($"Temp. idéale : {planteChoisie.TempPreferee} °C");
+                            JeuEnsemence.CentrerTexte($"Espérance de vie : {planteChoisie.EsperanceDeVie} sem.");
+                            JeuEnsemence.CentrerTexte("\nEntrée pour semer | Échap pour revenir");
 
                             var key2 = Console.ReadKey(true).Key;
                             if (key2 == ConsoleKey.Enter)
                             {
                                 PlanterDansGrille(terrainIndex, colonne, planteChoisie);
                                 graines[planteNom]--;
-                                Console.WriteLine($"\n✅ {planteChoisie.Nom} plantée !");
+                                JeuEnsemence.CentrerTexte($"\n✅ {planteChoisie.Nom} plantée !");
                                 Thread.Sleep(1000);
                                 enSelection = false;
                             }
@@ -373,7 +381,7 @@ public class Jardin
             }
             else
             {
-                Console.WriteLine("\n❌ Une plante est déjà présente !");
+                JeuEnsemence.CentrerTexte("\n Une plante est déjà présente !");
                 Thread.Sleep(1000);
             }
         }
@@ -382,11 +390,11 @@ public class Jardin
             if (plante != null)
             {
                 EauParcelle[terrainIndex, colonne] += 1.0f;
-                Console.WriteLine("\n💧 Vous avez arrosé la plante ! (+1L)");
+                JeuEnsemence.CentrerTexte("\n💧 Vous avez arrosé la plante ! (+1L)");
             }
             else
             {
-                Console.WriteLine("\n❌ Pas de plante à arroser !");
+                JeuEnsemence.CentrerTexte("\n❌ Pas de plante à arroser !");
             }
 
             Thread.Sleep(1000);
@@ -395,7 +403,7 @@ public class Jardin
         {
             if (plante != null && plante.CroissanceActuelle > 75 && plante.EstVivante)
             {
-                Console.WriteLine($"\n🌾 Vous avez récolté {plante.Nom} !");
+                JeuEnsemence.CentrerTexte($"\n🌾 Vous avez récolté {plante.Nom} !");
                 if (graines.ContainsKey(plante.Nom))
                     graines[plante.Nom] += plante.Fruits;
                 else
@@ -406,7 +414,7 @@ public class Jardin
             }
             else
             {
-                Console.WriteLine("\n❌ La plante n'est pas prête à être récoltée !");
+                JeuEnsemence.CentrerTexte("\n❌ La plante n'est pas prête à être récoltée !");
                 Thread.Sleep(1000);
             }
         }
@@ -416,8 +424,15 @@ public class Jardin
 
     private void AffichageGrilleAvecInfos(int terrainIndex, int colonne, Temporalite temp, Meteo meteo)
     {
-        Console.WriteLine($"📅 Date : {temp.DateActuelle}");
-        Console.WriteLine($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
+        JeuEnsemence.AfficherTitre();
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine();
+
+
+        JeuEnsemence.CentrerTexte($"📅 Date : {temp.DateActuelle}");
+        JeuEnsemence.CentrerTexte($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
         string effetMeteo = meteo.EvenementMeteo switch
         {
             "Pluie torrentielle" => "+2L sur toutes les parcelles",
@@ -431,14 +446,16 @@ public class Jardin
             _ => "effet inconnu"
         };
 
-        Console.WriteLine($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
+        JeuEnsemence.CentrerTexte($"🌤️ Météo : {meteo.EvenementMeteo ?? "Temps normal"} ({effetMeteo}) | 🌡️ Température : {temp.SaisonActuelle.Temperature}°C\n");
 
-        Console.WriteLine("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
+        JeuEnsemence.CentrerTexte("🎮 Flèches = naviguer | P = planter | A = arroser | Entrée = tour suivant\n");
 
         string reset = "\x1b[0m";
 
         for (int i = 0; i < Terrains.Length; i++)
         {
+            string ligneComplete = ""; // On construit la ligne complète ici
+
             for (int j = 0; j < 6; j++)
             {
                 var plante = GetPlante(i, j);
@@ -455,15 +472,24 @@ public class Jardin
                 {
                     icone = "  ";
                 }
+
+                string bloc;
                 if (estSelectionnee)
                 {
-                    Console.Write("\x1b[40m" + emoji + icone + " " + reset + "  ");
+                    bloc = "\x1b[47m" + emoji + icone + " " + reset + "  "; // fond blanc sélectionné
                 }
                 else
                 {
-                    Console.Write(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
+                    bloc = Terrains[i].Couleur + emoji + icone + " " + reset + "  ";
                 }
+
+                ligneComplete += bloc;
             }
+
+            // Centrer toute la ligne après construction
+            JeuEnsemence.CentrerTexte(ligneComplete);
+        
+
 
             Console.WriteLine();
             Console.WriteLine();  // saut de ligne entre terrains
@@ -509,16 +535,6 @@ public class Jardin
         }
     }
 
-
-    public float GetEau(int terrainIndex, int colonne)
-    {
-        return EauParcelle[terrainIndex, colonne];
-    }
-
-    public int GetLumiere(int terrainIndex, int colonne)
-    {
-        return LumiereParcelle[terrainIndex, colonne];
-    }
     
     public void EvaporationGenerale()
     {

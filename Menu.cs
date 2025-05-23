@@ -37,11 +37,12 @@ public class Menu
         do
         {
             Console.Clear();
-            Console.WriteLine(question + "\n");
+            JeuEnsemence.AfficherTitre();
+            JeuEnsemence.CentrerTexte(question + "\n");
 
             for (int i = 0; i < options.Length; i++)
             {
-                Console.WriteLine(i == index ? $"> {options[i]}" : $"  {options[i]}");
+                JeuEnsemence.CentrerTexte(i == index ? $"> {options[i]}" : $"  {options[i]}");
             }
 
             key = Console.ReadKey(true).Key;
