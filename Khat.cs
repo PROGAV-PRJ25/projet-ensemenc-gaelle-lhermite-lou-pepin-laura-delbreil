@@ -7,14 +7,14 @@ public class Khat : Plantes
         Nom = "Khat";
         EstVivante = true;
         TerrainPrefere = "argile";
-        VitesseCroissance = 4.0f;
+        VitesseCroissance = 5.0f;
         CroissanceActuelle = 0;
         BesoinEau = 1.5f;
         BesoinLumiere = 9.5f;
         TempPreferee = 27;
         EsperanceDeVie = 18;
         Fruits = 3;
-        EtatSante = 0.5f;
+        EtatSante = 0.55f;
         Emoji = "";
     }
 
@@ -24,13 +24,13 @@ public class Khat : Plantes
 
         if (eau >= BesoinEau) EtatSante += 0.01f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.02f;
-        if (temperature >= TempPreferee - 3 && temperature <= TempPreferee + 5) EtatSante += 0.01f;
+        if (temperature >= TempPreferee - 4 && temperature <= TempPreferee + 4) EtatSante += 0.01f;
         if (typeTerrain == TerrainPrefere) EtatSante += 0.005f;
 
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 3 * EtatSante;
 
         if ((EtatSante < 0.4f) || (age > EsperanceDeVie))
         {
@@ -60,7 +60,7 @@ public class Khat : Plantes
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦 ";
+                emoji = "🪦  ";
             }
         }
 

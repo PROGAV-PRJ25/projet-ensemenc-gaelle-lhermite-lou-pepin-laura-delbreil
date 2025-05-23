@@ -7,14 +7,14 @@ public class Hachich : PlanteVivace
         Nom = "Hachich";
         EstVivante = true;
         TerrainPrefere = "terre";
-        VitesseCroissance = 5;
+        VitesseCroissance = 7.0f;
         CroissanceActuelle = 0;
         BesoinEau = 2.0f;
         BesoinLumiere = 8.0f;
         TempPreferee = 25;
         EsperanceDeVie = 16;
         Fruits = 5;
-        EtatSante = 0.50f;
+        EtatSante = 0.6f;
         Emoji = "";
     }
 
@@ -26,19 +26,20 @@ public class Hachich : PlanteVivace
 
         if (eau >= BesoinEau) EtatSante += 0.01f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.01f;
-        if (temperature >= TempPreferee - 3 && temperature <= TempPreferee + 5) EtatSante += 0.01f;
+        if (temperature >= TempPreferee - 4 && temperature <= TempPreferee + 4) EtatSante += 0.01f;
         if (typeTerrain == TerrainPrefere) EtatSante += 0.01f;
 
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2; // saut de 2 semaines
-        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 3 * EtatSante;
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {
             EstVivante = false;
             EtatSante = 0.0f; // Mettre santé à 0
             Console.WriteLine($"{Nom} est morte.");
+            Thread.Sleep(1000);
             return;
         }
 
@@ -63,7 +64,7 @@ public class Hachich : PlanteVivace
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦 ";
+                emoji = "🪦  ";
             }
         }
 

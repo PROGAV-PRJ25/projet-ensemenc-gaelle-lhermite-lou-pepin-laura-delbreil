@@ -7,7 +7,7 @@ public class Salvia : PlanteVivace
         Nom = "Salvia";
         EstVivante = true;
         TerrainPrefere = "argile";
-        VitesseCroissance = 4.0f;
+        VitesseCroissance = 8.0f;
         CroissanceActuelle = 0;
         BesoinEau = 3.0f;
         BesoinLumiere = 6.0f;
@@ -24,13 +24,13 @@ public class Salvia : PlanteVivace
 
         if (eau >= BesoinEau) EtatSante += 0.005f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.01f;
-        if (temperature >= TempPreferee - 2 && temperature <= TempPreferee + 4) EtatSante += 0.005f;
+        if (temperature >= TempPreferee - 4 && temperature <= TempPreferee + 4) EtatSante += 0.005f;
         if (typeTerrain == TerrainPrefere) EtatSante += 0.003f;
 
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 3 * EtatSante;
 
         if ((EtatSante < 0.4f) || (age > EsperanceDeVie))
         {
@@ -60,7 +60,7 @@ public class Salvia : PlanteVivace
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦 ";
+                emoji = "🪦  ";
             }
         }
 

@@ -99,7 +99,7 @@ class Program
                                         {
                                                 string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
                                                 plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
-
+                                                Thread.Sleep(1000);
                                                 if (!plante.EstVivante && plante.ToursDepuisMort == 0)
                                                 {
                                                         plante.ToursDepuisMort = 1;
@@ -109,24 +109,6 @@ class Program
 
                         }
 
-                        for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
-                        {
-                                for (int col = 0; col < 6; col++)
-                                {
-                                        var plante = jardin.GetPlante(ligne, col);
-
-                                        if (plante != null)
-                                        {
-                                                string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
-
-                                                if (!plante.EstVivante && plante.ToursDepuisMort == 0)
-                                                {
-                                                        plante.ToursDepuisMort = 1;
-                                                }
-                                        }
-                                }
-                        }
 
                         // Passe au tour suivant et avance la date de 14 jours
                         temp.AvancerTemps();

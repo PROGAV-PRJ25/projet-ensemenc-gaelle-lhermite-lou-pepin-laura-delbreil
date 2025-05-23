@@ -62,7 +62,7 @@ public abstract class Plantes
 
     // Vérifie si les conditions sont trop éloignées des besoins
     bool conditionsDangeureuses =
-        eau < BesoinEau * 0.7f || eau > BesoinEau * 1.3f || lumiere < BesoinLumiere * 0.7f || lumiere > BesoinLumiere * 1.3f || Math.Abs(temperature - TempPreferee) > 6;
+        eau < BesoinEau * 0.6f || eau > BesoinEau * 1.4f || lumiere < BesoinLumiere * 0.6f || lumiere > BesoinLumiere * 1.4f || Math.Abs(temperature - TempPreferee) > 8;
 
     if (conditionsDangeureuses)
     {

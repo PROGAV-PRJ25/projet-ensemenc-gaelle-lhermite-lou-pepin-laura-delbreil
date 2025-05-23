@@ -8,14 +8,14 @@ public class Coca : Plantes
         Nom = "Coca";
         EstVivante = true;
         TerrainPrefere = "terre";
-        VitesseCroissance = 4.5f;
+        VitesseCroissance = 7.0f;
         CroissanceActuelle = 0;
         BesoinEau = 2.5f;
         BesoinLumiere = 9.0f;
         TempPreferee = 27;
         EsperanceDeVie = 16;
         Fruits = 6;
-        EtatSante = 0.55f;
+        EtatSante = 0.65f;
         Emoji = "";
     }
 
@@ -31,7 +31,7 @@ public class Coca : Plantes
         if (EtatSante > 1.0f) EtatSante = 1.0f;
 
         age += 2;
-        CroissanceActuelle += VitesseCroissance * EtatSante;
+        CroissanceActuelle += VitesseCroissance * 2 * EtatSante;
 
         if ((EtatSante < 0.5f) || (age > EsperanceDeVie))
         {
@@ -61,7 +61,7 @@ public class Coca : Plantes
                 EstVivante = false;
                 CroissanceActuelle = 0;
                 EtatSante = 0.0f;
-                emoji = "🪦 ";
+                emoji = "🪦  ";
             }
         }
 

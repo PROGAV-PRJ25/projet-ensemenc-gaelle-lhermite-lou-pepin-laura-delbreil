@@ -26,7 +26,7 @@ public class Opium : Plantes
 
         if (eau >= BesoinEau) EtatSante += 0.02f;
         if (lumiere >= BesoinLumiere) EtatSante += 0.01f;
-        if (temperature >= TempPreferee - 2 && temperature <= TempPreferee + 2) EtatSante += 0.01f;
+        if (temperature >= TempPreferee - 4 && temperature <= TempPreferee + 4) EtatSante += 0.01f;
         if (typeTerrain == TerrainPrefere) EtatSante += 0.01f;
 
         if (EtatSante > 1.0f) EtatSante = 1.0f;
