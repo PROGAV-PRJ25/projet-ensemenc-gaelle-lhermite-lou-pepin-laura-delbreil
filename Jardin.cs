@@ -169,11 +169,13 @@ public class Jardin
             JeuEnsemence.AfficherTitre();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
 
             JeuEnsemence.CentrerTexte($"📅 Date : {temp.DateActuelle}");
+            Console.WriteLine();
+
             JeuEnsemence.CentrerTexte($"🗓️ Saison : {temp.SaisonActuelle.Nom}");
+            Console.WriteLine();
+
             string effetMeteo = meteo.EvenementMeteo switch
             {
                 "Pluie torrentielle" => "+2L sur toutes les parcelles",
@@ -189,14 +191,13 @@ public class Jardin
 
             JeuEnsemence.CentrerTexte("🎮 Flèches = naviguer | P = planter | A = arroser | R = récolter | Entrée = tour suivant\n");
 
-            string reset = "\x1b[0m";
-
             for (int i = 0; i < Terrains.Length; i++)
             {
                 for (int j = 0; j < 6; j++)
                 {
                     var plante = GetPlante(i, j);
                     string emoji = plante?.Afficher() ?? "   ";
+                    bool estSelectionnee = (i == terrainIndex && j == colonne);
 
                     string icone;
                     var indesirable = Indesirables.IndesirableActuel;
@@ -208,22 +209,24 @@ public class Jardin
                     {
                         icone = "  ";
                     }
-                    bool estSelectionnee = (i == terrainIndex && j == colonne);
+
+                    string reset = "\x1b[0m";
+
                     if (estSelectionnee)
                     {
-                        JeuEnsemence.CentrerTexte("\x1b[40m" + emoji + icone + " " + reset + "  ");
+                        Console.Write("\x1b[47m" + emoji + icone + " " + reset + "  ");
                     }
                     else
                     {
-                        JeuEnsemence.CentrerTexte(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
+                        Console.Write(Terrains[i].Couleur + emoji + icone + " " + reset + "  ");
                     }
-
-
                 }
 
                 Console.WriteLine();
-                Console.WriteLine();  // saut de ligne entre terrains
+                Console.WriteLine();
             }
+
+
 
             AfficherInfosParcelle(terrainIndex, colonne, temp);
 
@@ -498,20 +501,6 @@ public class Jardin
         AfficherInfosParcelle(terrainIndex, colonne, temp);
     }
 
-    public void AppliquerLumiere(Saisons saison, Meteo meteo)
-    {
-        int baseLumiere = (int)saison.TauxSoleil;
-
-        if (meteo.EvenementMeteo == "Canicule") baseLumiere += 20;
-        if (meteo.EvenementMeteo == "Brouillard") baseLumiere -= 30;
-        if (meteo.EvenementMeteo == "Orage") baseLumiere -= 20;
-
-        baseLumiere = Math.Clamp(baseLumiere, 0, 100);
-
-        for (int i = 0; i < Terrains.Length; i++)
-            for (int j = 0; j < 6; j++)
-                LumiereParcelle[i, j] = baseLumiere;
-    }
 
     public void AppliquerEffetsMeteo(Meteo meteo)
     {
@@ -548,8 +537,5 @@ public class Jardin
             }
         }
     }
-
-    
-    
 
 }
