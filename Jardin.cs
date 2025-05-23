@@ -515,6 +515,10 @@ public class Jardin
                 // Bornes de sécurité
                 if (EauParcelle[i, j] < 0) EauParcelle[i, j] = 0;
                 if (EauParcelle[i, j] > 10) EauParcelle[i, j] = 10;
+
+                //Pour avoir des chiffres qui ont seulement 1 chiffre après la virgule
+                EauParcelle[i, j] = (float)Math.Round(EauParcelle[i, j], 1);
+
             }
         }
     }

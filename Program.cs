@@ -47,7 +47,6 @@ class Program
                 // Appel météo au lancement de la partie
                 meteo.GenererEvenement(temp.SaisonActuelle, temp);
                 meteo.ModifierValeursSaison(temp.SaisonActuelle);
-                jardin.AppliquerEffetsMeteo(meteo);
 
                 // Affichage du jardin
                 jardin.AffichageInteractif(temp, meteo);
@@ -58,7 +57,7 @@ class Program
                 while (temp.DateActuelle < dateFin) // boucle de jeu
                 {
                         Console.Clear();
-
+                        jardin.AppliquerEffetsMeteo(meteo);
                         meteo.GenererEvenement(temp.SaisonActuelle, temp);
                         indesirable.GererIndesirables(jardin, temp);
 
