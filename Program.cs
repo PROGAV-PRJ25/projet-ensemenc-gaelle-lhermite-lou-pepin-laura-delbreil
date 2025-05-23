@@ -58,19 +58,13 @@ class Program
 
 
                 while (temp.DateActuelle < dateFin)
-                {       
-
-                        
-
-                        jardin.AffichageInteractif(temp, meteo);
-
-
+                {
                         Console.Clear();
-
 
                         meteo.GenererEvenement(temp.SaisonActuelle, temp);
                         indesirable.GererIndesirables(jardin, temp);
 
+                        // 🔁 Changement de type d'objet Temporalite selon urgence
                         if (temp.EtatUrgence && temp.GetType() != typeof(TempoUrgence))
                         {
                                 temp = new TempoUrgence(temp.DateActuelle)
@@ -92,6 +86,32 @@ class Program
                                 };
                         }
 
+                        // ✅ Affiche une seule fois les alertes (centrées, propres)
+                        AfficherAlertesSiUrgence(temp, meteo);
+
+                        // 🪴 Affiche le jardin + interactions
+                        jardin.AffichageInteractif(temp, meteo);
+
+                        // 🌱 Croissance des plantes
+                        for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
+                        {
+                                for (int col = 0; col < 6; col++)
+                                {
+                                        var plante = jardin.GetPlante(ligne, col);
+                                        if (plante != null)
+                                        {
+                                                string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
+                                                plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
+
+                                                if (!plante.EstVivante && plante.ToursDepuisMort == 0)
+                                                        plante.ToursDepuisMort = 1;
+                                        }
+                                }
+
+
+                                jardin.EvaporationGenerale();    // Évaporation d'1L d’eau/parcelle
+                        }
+
                         for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
                         {
                                 for (int col = 0; col < 6; col++)
@@ -108,38 +128,53 @@ class Program
                                 }
                         }
 
-                        Console.WriteLine("\nAppuyez sur Entrée pour passer au prochain tour...");
-                        Console.ReadLine();
-
-                        temp.AvancerTemps(); // Avance de 1 ou 14 jours selon mode
-                        jardin.EvaporationGenerale(); // Moins 1L d'eau par parcelle par semaine
+                        // Passe au tour suivant (avance date de 14 jours)
+                        temp.AvancerTemps();
 
                 }
-
-
-                Console.WriteLine(temp is TempoUrgence ? "⚠️ MODE URGENCE" : "✅ MODE NORMAL");
-
-                for (int ligne = 0; ligne < jardin.Terrains.Length; ligne++)
-                {
-                        for (int col = 0; col < 6; col++)
-                        {
-                                var plante = jardin.GetPlante(ligne, col);
-                                if (plante != null)
-                                {
-                                        string typeTerrain = jardin.Terrains[ligne].GetType().Name.ToLower();
-                                        plante.EvaluerCroissance(temp.SaisonActuelle, meteo, temp, typeTerrain);
-
-                                        if (!plante.EstVivante && plante.ToursDepuisMort == 0)
-                                                plante.ToursDepuisMort = 1;
-                                }
-                        }
-                }
-
-                // Passe au tour suivant (avance date de 14 jours)
-                temp.AvancerTemps();
-
         }
-}
 
+        static bool alerteDejaAffichee = false;
+
+        static void AfficherAlertesSiUrgence(Temporalite temp, Meteo meteo)
+        {
+        if (temp is TempoUrgence && !alerteDejaAffichee)
+        {
+                bool affichage = false;
+
+                if (!string.IsNullOrEmpty(meteo.EvenementMeteo) && meteo.EvenementMeteo != "Temps normal")
+                {
+                Console.ForegroundColor = ConsoleColor.Red;
+                JeuEnsemence.CentrerTexte($"🚨 URGENCE MÉTÉO : {meteo.EvenementMeteo.ToUpper()} !");
+                Console.ResetColor();
+                affichage = true;
+                }
+
+                if (Indesirables.IndesirableActuel != null && Indesirables.IndesirableActuel.EstPresent)
+                {
+                Console.ForegroundColor = ConsoleColor.Red;
+                JeuEnsemence.CentrerTexte($"🚨 URGENCE INTRUS : {Indesirables.IndesirableActuel.Nom.ToUpper()} DANS VOTRE JARDIN !");
+                Console.ResetColor();
+                affichage = true;
+                }
+
+                if (affichage)
+                {
+                Console.WriteLine();
+                JeuEnsemence.CentrerTexte("Appuyez sur une touche pour continuer...");
+                Console.ReadKey(true);
+                }
+
+                alerteDejaAffichee = true;
+        }
+
+        // Réinitialise quand on sort du mode urgence
+        if (!(temp is TempoUrgence))
+                {
+                        alerteDejaAffichee = false;
+                }
+        }
+
+}
 
 

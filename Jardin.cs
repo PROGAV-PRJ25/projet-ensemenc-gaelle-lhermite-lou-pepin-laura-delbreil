@@ -7,14 +7,9 @@ public class Jardin
     public Terrain[] Terrains { get; private set; }
     private Plantes?[,] Grille;// Tableau pour gérer la grille du jardin (6 colonnes)
     private float[,] EauParcelle; // eau en litres
-    private int[,] LumiereParcelle;
     public List<Indesirables> IndesirablesDansJardin { get; set; } = new List<Indesirables>();
     private Dictionary<string, int> graines;
     private JeuEnsemence jeuTitre = new JeuEnsemence();
-
-
-
-
 
     // crée tableau terrains + init grille plantation
     public Jardin(Menu menu, Dictionary<string, int> grainesInitiales)
@@ -27,17 +22,18 @@ public class Jardin
 
         EauParcelle = new float[nombreDeTerrains, 6];
         for (int i = 0; i < nombreDeTerrains; i++)
+        {
             for (int j = 0; j < 6; j++)
+            {
                 EauParcelle[i, j] = 1.0f; // 1L par défaut
+            }
 
-        LumiereParcelle = new int[nombreDeTerrains, 6];
-
+        }
         for (int i = 0; i < nombreDeTerrains; i++)
         {
             for (int j = 0; j < 6; j++)
             {
                 EauParcelle[i, j] = 1.0f;     // 1 litre d'eau par défaut
-                LumiereParcelle[i, j] = 60;   // 60% de lumière par défaut
             }
         }
 
@@ -268,7 +264,6 @@ public class Jardin
         var plante = GetPlante(terrainIndex, colonne);
 
         float eau = EauParcelle[terrainIndex, colonne];
-        int tauxLumiere = LumiereParcelle[terrainIndex, colonne];
 
         JeuEnsemence.CentrerTexte($"   {Terrains[terrainIndex].Nom}  ");
         JeuEnsemence.CentrerTexte("-----------------------------");
