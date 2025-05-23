@@ -1,6 +1,6 @@
 ///
 /// 
-/// Classe pour gérer l'inventaire (acheter, sélectionner ou utiliser un objet)
+/// Classe pour gérer l'inventaire (acheter, sélectionner ou utiliser un objet) > a été supprimé car choix d'affichages différents
 /// 
 /// 
 /*public class Inventaire

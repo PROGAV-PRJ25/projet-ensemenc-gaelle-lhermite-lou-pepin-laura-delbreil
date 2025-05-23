@@ -121,6 +121,7 @@ public class Indesirables
     EstPresent = false;
 }
 
+//Fonction qui n'a pas été utilisée dans le code final car nous avons fait le choix de représenter les solutions différement (pas à travers un inventaire)
 /*
     //Fct pour faire partir l'indésirable en utilisant un objet
     public void FairePartir(Inventaire inventaire)
