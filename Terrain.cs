@@ -1,6 +1,6 @@
 /// <summary>
 /// 
-/// Classe abstraite pr définir base commune à tous les types de terrain
+/// Classe abstraite pour définir base commune à tous les types de terrains
 /// Gère type de sol, nom, nb de parcelles, options d'affichage...
 /// 
 /// </summary>
@@ -8,13 +8,13 @@ public abstract class Terrain
 {
     private static int compteurTerrains = 0;  // Compteur partagé entre tous les terrains
 
-    public string Couleur { get; set; } = "\x1b[48;5;240m"; //couleur de fon des terrains
+    public string Couleur { get; set; } = "\x1b[48;5;240m"; //couleur de fond des terrains
     public string? Nom { get; set; }
     public string? TypeDeSol { get; set; } // "Terre", "Sable", "Argile"
     public bool? ALaLumiere { get; set; } 
     public bool? PourvuEnEau { get; set; }
     public bool? ProtégéContreIntrus { get; set; }
-    public int? NbParcelles { get; set; } // Nb Parcelles est fixe à 6 pour ce jeu
+    public int? NbParcelles { get; set; } //On fixe un nombre de 6 parcelles pour chaque terrains
 
     // Constructeur : initialise attributs de base du terrain (type, nom, parcelles...)
     public Terrain(string typeDeSol, int nbParcelles)
@@ -32,7 +32,7 @@ public abstract class Terrain
     public virtual void Afficher(Menu menu, Plantes?[,] grilleJardin, int terrainIndex)
     {
         int colonnes = 6;
-        string reset = "\x1b[0m";
+        string reset = "\x1b[0m"; 
 
         for (int col = 0; col < colonnes; col++)
         {

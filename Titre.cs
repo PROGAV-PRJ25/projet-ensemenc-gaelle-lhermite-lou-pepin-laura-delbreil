@@ -9,7 +9,7 @@ public class JeuEnsemence
     // Affiche titre ascii et lance menu principal 
     public void LancerMenuPrincipal()
     {
-        string[] optionsMenuPrincipal = { "COMMENCER", "RÈGLES DU JEU" };
+        string[] optionsMenuPrincipal = { "COMMENCER", "RÈGLES DU JEU" }; // Choix possible pour le joueur au lancement de la partie
 
         while (true)
         {
@@ -26,7 +26,7 @@ public class JeuEnsemence
         }
     }
 
-    // Affiche titre + règles complètes du jeu, centrées à l'écran
+    // Afficher titre et règles complètes du jeu, centrées à l'écran
     private void AfficherRegles()
     {
         Console.Clear();
@@ -36,37 +36,27 @@ public class JeuEnsemence
         {
             "-- RÈGLES --",
             "",
-            "Bienvenue dans ENSEMENCE, un jeu de gestion pas comme les autres,",
-            "où vous incarnez le maître d’un jardin de plantes atypiques.",
+            "Bienvenue dans ENSEMENCE, un jeu de plantation pas comme les autres,",
+            "où vous incarnez le maître d’un jardin de plantes atypiques...",
             "Ce jardin, foisonnant de formes et de couleurs étranges, est le fruit d’une culture attentive,",
             "où chaque plante possède ses propres exigences, son rythme, et parfois… ses caprices.",
             "",
-            "Votre mission ? Semer, soigner, protéger…",
-            "mais surtout comprendre les besoins de vos plantes extraordinaires",
+            "Votre mission ? Semer, soigner, protéger mais surtout cultiver !",
+            "Vous devrez comprendre les besoins de vos plantes extraordinaires",
             "pour qu'elles s’épanouissent dans leur terrain préféré,",
             "sous un climat que vous devrez apprendre à dompter.",
             "",
             "Certaines plantes sont comestibles,",
             "d'autres ornementales ou carrément fantastiques.",
-            "Elles ont toutes quelque chose d’unique.",
             "",
-            "Mais attention : tout ne pousse pas dans la sérénité.",
+            "Mais attention... tout ne pousse pas dans la sérénité.",
             "",
-            "Le jardin est régulièrement menacé par des intrus.",
-            "Dans votre version du jeu, ces intrus prennent la forme de policiers,",
-            "sortes d’ennemis qui pénètrent votre potager avec des intentions peu claires.",
-            "",
+            "Le jardin est régulièrement menacé par des intrus de toutes sortes.",
             "Lorsqu’ils apparaissent, le jeu bascule en mode urgence.",
-            "Vous devrez alors agir vite pour les repousser ou protéger vos cultures",
-            "à l’aide de moyens détournés – jamais violents, mais ingénieux.",
+            "Vous devrez alors agir vite pour les repousser ou protéger vos précieuses cultures.",
             "",
-            "Entre gestion stratégique, observation méticuleuse",
-            "et réactions vives face à l’imprévu,",
-            "ENSEMENCE vous plonge dans un monde à la fois tranquille et menaçant,",
-            "féerique mais fragile.",
             "",
-            "Prêt à plonger les mains dans la terre",
-            "et à défendre votre royaume végétal ?"
+            "Prêt à plonger les mains dans la terre et à défendre votre royaume végétal ?"
         };
 
         foreach (string ligne in lignesRegles)
@@ -75,11 +65,11 @@ public class JeuEnsemence
         }
 
         Console.WriteLine();
-        CentrerTexte("Appuyez sur une touche pour revenir au menu principal...");
+        CentrerTexte("<=");
         Console.ReadKey(true);
     }
 
-    // Affiche menu vertical, navigation clavier, retourne index sélectionné
+    // Affichage du menu de départ
     private int AfficherMenu(string[] options)
     {
         int selection = 0;
@@ -118,7 +108,7 @@ public class JeuEnsemence
         return selection;
     }
 
-    // Affiche ascii art centré représentant ENSEMENCE
+    // Affichage en ascii du titre du jeu
     public static void AfficherTitre()
     {
         string[] titre =
@@ -141,7 +131,7 @@ public class JeuEnsemence
         }
     }
 
-    // Centre un texte en console selon largeur actuelle
+    // Permet de centrer le texte dans la console
     public static void CentrerTexte(string texte)
     {
         int largeurConsole = Console.WindowWidth;
